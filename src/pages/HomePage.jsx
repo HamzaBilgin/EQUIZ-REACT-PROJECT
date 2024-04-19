@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
-    <div className="mt-[200px]  w-1/3 h-1/4 flex flex-col justify-around items-center ">
+    <div className="h-[200px] w-[500px] flex flex-col justify-around items-center  ">
       <h1>WELCOME TO EQUIZ</h1>
       <div className="w-full flex justify-around">
         <Link
