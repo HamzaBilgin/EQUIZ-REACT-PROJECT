@@ -2,8 +2,7 @@ import { useRef } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import db, { auth } from "../../FireBasee/Myfirebase";
-import { doc, getDoc } from "firebase/firestore";
+
 import { authActions } from "../../store/slice/authSlice";
 import { useDispatch } from "react-redux";
 import { userInfoActions } from "../../store/slice/userInfoSlice";
@@ -55,6 +54,13 @@ const LoginForm = () => {
       dispatch(userInfoActions.setUserInfo(userFromDb));
       localStorage.setItem("userInfo", JSON.stringify(userFromDb));
 
+      if (userFromDb.role === "student") {
+        navigate(`/student/${userFromDb.uid}`);
+      } else if (userFromDb.role === "instructor") {
+        navigate(`/instructor/${userFromDb.uid}`);
+      } else {
+        throw new Error("Hata fırlatıldı!");
+      }
       formRef.current.resetFields();
     } catch (error) {
       modal.error({
@@ -69,13 +75,6 @@ const LoginForm = () => {
       });
     }
   };
-  // const getUserFromDb = async (uid) => {
-  //   const docRef = doc(db, "users", uid);
-  //   const docSnap = await getDoc(docRef);
-  //   dispatch(userInfoActions.setUserInfo(docSnap.data()));
-  //   localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
-  //   return docSnap.data();
-  // };
 
   return (
     <div className="w-[300px] m-auto mt-6 h-dvh">

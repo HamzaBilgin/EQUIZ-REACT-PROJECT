@@ -11,7 +11,7 @@ const MainRoutes = [
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <HomePage layout={"default"} />,
       },
       { path: "auth/register", element: <RegisterPage /> },
       { path: "auth/login", element: <LoginPage /> },

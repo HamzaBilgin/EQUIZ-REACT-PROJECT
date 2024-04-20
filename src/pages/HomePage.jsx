@@ -1,28 +1,35 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { Fragment, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import ErrorPage from "./ErrorPage";
+import DefaultHomePage from "../components/DefaultHomePage";
+import StudentPage from "../components/student/StudentPage";
 
-const HomePage = () => {
+const HomePage = ({ layout }) => {
+  const [userComponent, setUserComponent] = useState(null);
+
+  useEffect(() => {
+    switch (layout) {
+      case "default":
+        setUserComponent(<DefaultHomePage />);
+        break;
+      // case "instructor":
+      //   setUserComponent(<InstructorPage />);
+      //   break;
+      case "student":
+        setUserComponent(<StudentPage />);
+        break;
+      default:
+        setUserComponent(<ErrorPage />);
+        break;
+    }
+  }, [layout]);
   return (
-    <div className="h-[200px] w-[500px] flex flex-col justify-around items-center  ">
-      <h1>WELCOME TO EQUIZ</h1>
-      <div className="w-full flex justify-around">
-        <Link
-          to="/auth/login"
-          relative="path"
-          className="text-gray-800  font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 hover:bg-indigo-900/50 hover:text-white"
-        >
-          <span>LOGIN</span>
-        </Link>
-        <Link
-          to="/auth/register"
-          relative="path"
-          className="text-gray-800  font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 hover:bg-indigo-900/50 hover:text-white"
-        >
-          <span>REGISTER</span>
-        </Link>
-      </div>
+    <div className="mt-[70px] max-w-screen-xl w-full m-auto">
+      <Fragment>{userComponent}</Fragment>
     </div>
   );
 };
-
+HomePage.propTypes = {
+  layout: PropTypes.string,
+};
 export default HomePage;
