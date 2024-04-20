@@ -50,7 +50,7 @@ const Header = () => {
               EQuiz
             </span>
           </Link>
-
+          
           <Dropdown
             className="cursor-pointer"
             menu={{

@@ -2,18 +2,18 @@ import UserLayout from "../layout/UserLayout";
 import ErrorPage from "../pages/ErrorPage";
 import HomePage from "../pages/HomePage";
 
-const StudentRoutes = [
+const InstructorRoutes = [
   {
-    path: "/student",
+    path: "/instructor",
     element: <UserLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: ":studentId",
-        element: <HomePage layout={"student"} />,
+        path: ":instructorId",
+        element: <HomePage layout={"instructor"} />,
       },
     ],
   },
 ];
 
-export default StudentRoutes;
+export default InstructorRoutes;

@@ -1,8 +1,10 @@
 import { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ErrorPage from "./ErrorPage";
-import DefaultHomePage from "../components/DefaultHomePage";
-import StudentPage from "../components/student/StudentPage";
+
+import InstructorPage from "./InstructorPage";
+import DefaultHomePage from "./DefaultHomePage";
+import StudentPage from "./StudentPage";
 
 const HomePage = ({ layout }) => {
   const [userComponent, setUserComponent] = useState(null);
@@ -12,9 +14,9 @@ const HomePage = ({ layout }) => {
       case "default":
         setUserComponent(<DefaultHomePage />);
         break;
-      // case "instructor":
-      //   setUserComponent(<InstructorPage />);
-      //   break;
+      case "instructor":
+        setUserComponent(<InstructorPage />);
+        break;
       case "student":
         setUserComponent(<StudentPage />);
         break;
