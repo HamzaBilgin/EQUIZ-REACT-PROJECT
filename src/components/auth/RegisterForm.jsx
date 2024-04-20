@@ -3,7 +3,9 @@ import axios from "axios";
 import { Button, Form, Input, Radio, Modal, Space } from "antd";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import db, { auth } from "../../FireBasee/Myfirebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createUserIntoDb } from "../../actions/authActions/authActions";
+
 const layout = {
   labelCol: {
     span: 8,
@@ -44,35 +46,24 @@ const validateEmail = (_, value) => {
 
 const RegisterForm = () => {
   const formRef = useRef();
-
+  const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("Content of the modal");
   const onFinish = async ({ password, user }) => {
     formRef.current.resetFields();
-    auth
-      .createUserWithEmailAndPassword(user.email, password)
-      .then((userCredential) => {
-        const newUser = userCredential.user;
-
-        addUserToFirestore(newUser.uid, user, password);
-      })
-      .catch((error) => {
-        handleRegistrationError(error);
-      });
+    createUserIntoDb(user, password, handleRegistrationError);
+    setTimeout(() => {
+      setConfirmLoading(false);
+      navigate(`/auth/login`);
+      setOpen(false);
+    }, 2000);
   };
-  // kullanıcıyı firestore a ekler
-  async function addUserToFirestore(uid, user, password) {
-    const docData = {
-      uid: uid,
-      password: password,
-      ...user,
-    };
-    await setDoc(doc(db, "users", uid), docData);
-  }
+
   //Hatalı durularda modal text i revize eder
   function handleRegistrationError(error) {
+    console.log(error);
     switch (error.code) {
       case "auth/email-already-in-use":
         errorModalModify("Email already in use");
@@ -139,6 +130,7 @@ const RegisterForm = () => {
   const handleCancel = () => {
     setOpen(false);
   };
+
   return (
     <div>
       <div className="w-[500px] mr-40">

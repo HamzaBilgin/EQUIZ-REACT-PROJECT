@@ -5,8 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import db, { auth } from "../../FireBasee/Myfirebase";
 import { doc, getDoc } from "firebase/firestore";
 import { authActions } from "../../store/slice/authSlice";
-import { userInfoActions } from "../../store/slice/userInfoSlice";
 import { useDispatch } from "react-redux";
+import { userInfoActions } from "../../store/slice/userInfoSlice";
+import { loginUser } from "../../actions/authActions/authActions";
 
 const errorConfig = {
   title: "Error!",
@@ -45,25 +46,15 @@ const LoginForm = () => {
 
   const onFinish = async (values) => {
     try {
-      const userCredentials = await auth.signInWithEmailAndPassword(
-        values.user.email,
-        values.user.password
-      );
-
-      const user = userCredentials.user;
-      const dbdata = await getUserFromDb(user.uid);
+      const userFromDb = await loginUser(values);
 
       dispatch(authActions.login());
       const isAuthenticated = JSON.stringify(true);
       localStorage.setItem("isAuthenticated", isAuthenticated);
 
-      if (dbdata.role === "admin") {
-        navigate(`/admin/${user.uid}`);
-      } else if (dbdata.role === "instructor") {
-        navigate(`/instructor/${user.uid}`);
-      } else {
-        navigate(`/student/${user.uid}`);
-      }
+      dispatch(userInfoActions.setUserInfo(userFromDb));
+      localStorage.setItem("userInfo", JSON.stringify(userFromDb));
+
       formRef.current.resetFields();
     } catch (error) {
       modal.error({
@@ -78,13 +69,13 @@ const LoginForm = () => {
       });
     }
   };
-  const getUserFromDb = async (uid) => {
-    const docRef = doc(db, "users", uid);
-    const docSnap = await getDoc(docRef);
-    dispatch(userInfoActions.setUserInfo(docSnap.data()));
-    localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
-    return docSnap.data();
-  };
+  // const getUserFromDb = async (uid) => {
+  //   const docRef = doc(db, "users", uid);
+  //   const docSnap = await getDoc(docRef);
+  //   dispatch(userInfoActions.setUserInfo(docSnap.data()));
+  //   localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
+  //   return docSnap.data();
+  // };
 
   return (
     <div className="w-[300px] m-auto mt-6 h-dvh">
