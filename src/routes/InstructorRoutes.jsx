@@ -1,4 +1,8 @@
 import ChangePassword from "../components/ChangePassword";
+import Quiz from "../components/instructor/handleQuiz/Quiz";
+import QuizDetail from "../components/instructor/handleQuiz/QuizDetail";
+import Lesson from "../components/instructor/handleResult/Lesson";
+import Result from "../components/instructor/handleResult/Result";
 import UserLayout from "../layout/UserLayout";
 import ErrorPage from "../pages/ErrorPage";
 import HomePage from "../pages/HomePage";
@@ -13,6 +17,10 @@ const InstructorRoutes = [
         path: ":instructorId",
         element: <HomePage layout={"instructor"} />,
       },
+      { path: "lesson/:categoryName", element: <Lesson /> },
+      { path: "quiz/detail", element: <QuizDetail /> },
+      { path: "makeQuiz", element: <Quiz /> },
+      { path: "result", element: <Result /> },
       {
         path: "changePassword",
         element: <ChangePassword />,
