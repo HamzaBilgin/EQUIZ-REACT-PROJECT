@@ -44,8 +44,9 @@ const LoginForm = () => {
   const [modal, contextHolder] = Modal.useModal();
 
   const onFinish = async (values) => {
+    const { email, password } = values.user;
     try {
-      const userFromDb = await loginUser(values);
+      const userFromDb = await loginUser(email, password);
 
       dispatch(authActions.login());
       const isAuthenticated = JSON.stringify(true);

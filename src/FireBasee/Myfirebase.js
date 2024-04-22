@@ -18,7 +18,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const auth = firebase.auth();
-auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+// auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
 export { auth };
 
 const app = initializeApp(firebaseConfig);
@@ -30,7 +30,7 @@ export default db;
 // const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 // const db = getFirestore(app); // Firestore nesnesini alın
-// // const auth = firebase.auth();
+// const auth = firebase.auth();
 // // const provider = new firebase.auth.GoogleAuthProvider();
 
 // export default db;

@@ -1,3 +1,4 @@
+import ChangePassword from "../components/ChangePassword";
 import UserLayout from "../layout/UserLayout";
 import ErrorPage from "../pages/ErrorPage";
 import HomePage from "../pages/HomePage";
@@ -11,6 +12,10 @@ const InstructorRoutes = [
       {
         path: ":instructorId",
         element: <HomePage layout={"instructor"} />,
+      },
+      {
+        path: "changePassword",
+        element: <ChangePassword />,
       },
     ],
   },
