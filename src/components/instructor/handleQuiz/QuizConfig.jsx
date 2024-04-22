@@ -1,9 +1,39 @@
-import { doc, getDoc } from "firebase/firestore";
-import React, { useId } from "react";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import React, { useEffect, useId, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "../../../FireBasee/Myfirebase";
+import { Button } from "antd";
 
 const QuizConfig = () => {
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [quizInfo, setQuizInfo] = useState({});
+  const params = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log(params.quizId);
+      const docRef = doc(db, "quizzes", params.quizId);
+      const docSnap = await getDoc(docRef);
+      setQuizInfo(docSnap.data());
+      console.log(docSnap.data());
+    };
+
+    fetchData(); // fetchData fonksiyonunu çağırın
+  }, []);
+  const setQuestionIndexHandler = (index) => {
+    console.log(index);
+    // setQuestionIndex();
+  };
+  const getQuiz = async () => {
+    console.log(params.quizId);
+  };
   //   const params = useParams();
   //   console.log(params.quizId);
 
@@ -29,7 +59,17 @@ const QuizConfig = () => {
         </div>
       </div>
       <div className="mt-5 flex">
-        <div className="bg-slate-200 w-1/6 p-2">Questions</div>
+        <div className="bg-slate-200 w-1/6 ">
+          <div className="text-center p-2">ALL</div>
+          <ul className="text-center">
+            <li>a</li>
+          </ul>
+          <div className="flex justify-center">
+            <button className=" py-1 px-6 hover:bg-red-200 hover">
+              Add Question
+            </button>
+          </div>
+        </div>
         <div className="w-5/4 p-2">QuestionsDetail</div>
       </div>
     </div>

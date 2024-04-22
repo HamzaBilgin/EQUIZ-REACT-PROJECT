@@ -11,7 +11,7 @@ const formItemLayout = {
       span: 24,
     },
     sm: {
-      span: 6,
+      span: 7,
     },
   },
   wrapperCol: {
@@ -51,6 +51,7 @@ const CreateQuizModal = ({ handleCancel }) => {
       ...makeQuiz,
       liveQuizId: randomData,
       createdAt: now,
+      questions: [],
     });
     console.log(docRef.id);
     navigate(`/instructor/${docRef.id}/makeQuizConfig`);
@@ -104,6 +105,17 @@ const CreateQuizModal = ({ handleCancel }) => {
         ]}
       >
         <Input />
+      </Form.Item>
+      <Form.Item
+        name={["makeQuiz", "quizDuration"]}
+        label="Quiz Duration(dk)"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input type="number" />
       </Form.Item>
       <Form.Item
         label="Category"
