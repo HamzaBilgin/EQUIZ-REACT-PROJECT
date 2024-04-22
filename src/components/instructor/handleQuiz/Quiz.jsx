@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { Button, Card, Modal } from "antd";
 import QuizQuestion from "./QuizQuestion";
 import NestedTable from "./NestedTable";
+import CreateQuizModal from "./CreateQuizModal";
 
 const quizOperations = [
   {
@@ -23,6 +24,7 @@ const quizOperations = [
 
 const Quiz = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -62,8 +64,18 @@ const Quiz = () => {
           onCancel={handleCancel}
           footer={null}
         >
-          <QuizQuestion handleCancel={handleCancel} />
+          <CreateQuizModal handleCancel={handleCancel} />
+          {/* <QuizQuestion handleCancel={handleCancel} /> */}
         </Modal>
+        {/* <Modal
+          title="Creaet New Quiz"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <QuizQuestion handleCancel={handleCancel} />
+        </Modal> */}
       </div>
       <NestedTable />
     </div>
