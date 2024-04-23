@@ -10,6 +10,8 @@ import React, { useEffect, useId, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "../../../FireBasee/Myfirebase";
 import { Button } from "antd";
+import QuizConfigItem from "./QuizConfigItem";
+import QuizQuestion from "./QuizQuestion";
 
 const QuizConfig = () => {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -27,23 +29,7 @@ const QuizConfig = () => {
 
     fetchData(); // fetchData fonksiyonunu çağırın
   }, []);
-  const setQuestionIndexHandler = (index) => {
-    console.log(index);
-    // setQuestionIndex();
-  };
-  const getQuiz = async () => {
-    console.log(params.quizId);
-  };
-  //   const params = useParams();
-  //   console.log(params.quizId);
 
-  //   const getQuizFromDb = async () => {
-  //     const docRef = doc(db, "quizzes", params.quizId);
-  //     const docSnap = await getDoc(docRef);
-  //     console.log(docSnap.data());
-  //     return docSnap.data();
-  //   };
-  //   console.log(getQuizFromDb());
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
       <div className="bg-slate-200">
@@ -62,7 +48,11 @@ const QuizConfig = () => {
         <div className="bg-slate-200 w-1/6 ">
           <div className="text-center p-2">ALL</div>
           <ul className="text-center">
-            <li>a</li>
+            {quizInfo.questions?.map((item, index) => (
+              <li key={index} className="cursor-pointer">
+                {index}
+              </li>
+            ))}
           </ul>
           <div className="flex justify-center">
             <button className=" py-1 px-6 hover:bg-red-200 hover">
@@ -70,7 +60,9 @@ const QuizConfig = () => {
             </button>
           </div>
         </div>
-        <div className="w-5/4 p-2">QuestionsDetail</div>
+        <div className="w-5/4 p-2">
+          <QuizConfigItem />
+        </div>
       </div>
     </div>
   );
