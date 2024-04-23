@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { Form, Input, Radio, Space, Button, Select } from "antd";
 import { Option } from "antd/es/mentions";
 
@@ -20,14 +20,23 @@ const formItemLayout = {
     },
   },
 };
-const QuizConfigItem = () => {
-  const [selectedOption, setSelectedOption] = useState("");
+const QuizConfigItem = ({ addQuestion, questionInfo }) => {
+  const { question, options } = questionInfo;
+  const [selectedOption, setSelectedOption] = useState("B");
   const [questionOption, setQuestionOption] = useState([
     { id: "A", value: "", correct: false },
     { id: "B", value: "", correct: false },
     { id: "C", value: "", correct: false },
     { id: "D", value: "", correct: false },
   ]);
+
+  useEffect(() => {
+    // const radioId = options?.find((item) => {
+    //   return item.correct === true;
+    // });
+    // setSelectedOption(radioId.id);
+    // setQuestionOption(options);
+  }, [options]);
   //category area start
   const categories = [
     { label: "Türkçe", value: "turkce" },
@@ -52,8 +61,8 @@ const QuizConfigItem = () => {
       question: formValues.questionArea,
       options: updatedOptions,
     };
-    console.log(questionData);
-    onsubmit(questionData);
+
+    addQuestion(questionData);
   };
   //handleSubmit area end
   const handleInputChange = (id, newValue) => {
@@ -99,6 +108,7 @@ const QuizConfigItem = () => {
           <Radio.Group
             name="radiogroup"
             defaultValue={1}
+            value={selectedOption}
             onChange={(e) => setSelectedOption(e.target.value)}
           >
             {questionOption.map((option) => (

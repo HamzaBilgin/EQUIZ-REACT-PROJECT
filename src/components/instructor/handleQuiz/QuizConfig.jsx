@@ -1,34 +1,42 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import React, { useEffect, useId, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "../../../FireBasee/Myfirebase";
-import { Button } from "antd";
-import QuizConfigItem from "./QuizConfigItem";
-import QuizQuestion from "./QuizQuestion";
 
+import QuizConfigItem from "./QuizConfigItem";
+import ShowAllQuestions from "./ShowAllQuestions";
+let initalQuestion = {
+  question: "",
+  options: [
+    { id: "A", value: "", correct: false },
+    { id: "B", value: "", correct: false },
+    { id: "C", value: "", correct: false },
+    { id: "D", value: "", correct: false },
+  ],
+};
 const QuizConfig = () => {
+  const [showAllQuestion, setShowAllQuestion] = useState(true);
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [questionInfo, setQuestionInfo] = useState({});
   const [quizInfo, setQuizInfo] = useState({});
   const params = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(params.quizId);
       const docRef = doc(db, "quizzes", params.quizId);
       const docSnap = await getDoc(docRef);
       setQuizInfo(docSnap.data());
-      console.log(docSnap.data());
     };
 
-    fetchData(); // fetchData fonksiyonunu çağırın
+    fetchData();
   }, []);
+  const handleLiCLick = (index) => {
+    setShowAllQuestion(false);
+    setQuestionInfo(quizInfo.questions[index]);
+  };
+  const addQuestion = (data) => {
+    setQuizInfo({ ...quizInfo, questions: [...quizInfo.questions, data] });
+  };
 
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
@@ -46,22 +54,41 @@ const QuizConfig = () => {
       </div>
       <div className="mt-5 flex">
         <div className="bg-slate-200 w-1/6 ">
-          <div className="text-center p-2">ALL</div>
+          <div
+            className="text-center p-2 cursor-pointer"
+            onClick={() => setShowAllQuestion(true)}
+          >
+            ALL
+          </div>
           <ul className="text-center">
             {quizInfo.questions?.map((item, index) => (
-              <li key={index} className="cursor-pointer">
+              <li
+                key={index}
+                className="cursor-pointer"
+                onClick={() => handleLiCLick(index)}
+              >
                 {index}
               </li>
             ))}
           </ul>
           <div className="flex justify-center">
-            <button className=" py-1 px-6 hover:bg-red-200 hover">
+            <button
+              className=" py-1 px-6 hover:bg-red-200 hover"
+              onClick={() => addQuestion(initalQuestion)}
+            >
               Add Question
             </button>
           </div>
         </div>
         <div className="w-5/4 p-2">
-          <QuizConfigItem />
+          {showAllQuestion ? (
+            <ShowAllQuestions />
+          ) : (
+            <QuizConfigItem
+              addQuestion={addQuestion}
+              questionInfo={questionInfo}
+            />
+          )}
         </div>
       </div>
     </div>
