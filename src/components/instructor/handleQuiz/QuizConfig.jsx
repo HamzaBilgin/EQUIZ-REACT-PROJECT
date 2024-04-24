@@ -8,18 +8,19 @@ import ShowAllQuestions from "./ShowAllQuestions";
 let initalQuestion = {
   question: "",
   options: [
-    { id: "A", value: "", correct: false },
-    { id: "B", value: "", correct: false },
-    { id: "C", value: "", correct: false },
-    { id: "D", value: "", correct: false },
+    { id: "A", value: "" },
+    { id: "B", value: "" },
+    { id: "C", value: "" },
+    { id: "D", value: "" },
   ],
+  correctOption: "",
 };
 const QuizConfig = () => {
-  const [showAllQuestion, setShowAllQuestion] = useState(true);
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [questionInfo, setQuestionInfo] = useState({});
-  const [quizInfo, setQuizInfo] = useState({});
   const params = useParams();
+  const [showAllQuestion, setShowAllQuestion] = useState(true);
+  const [arrayIndex, setArrayIndex] = useState(0);
+  const [quizInfo, setQuizInfo] = useState({});
+  const [questionInfo, setQuestionInfo] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,11 +34,22 @@ const QuizConfig = () => {
   const handleLiCLick = (index) => {
     setShowAllQuestion(false);
     setQuestionInfo(quizInfo.questions[index]);
+    setArrayIndex(index);
   };
-  const addQuestion = (data) => {
-    setQuizInfo({ ...quizInfo, questions: [...quizInfo.questions, data] });
+  const updateQuestion = (data) => {
+    setQuizInfo({
+      ...quizInfo,
+      questions: quizInfo.questions.map((question, i) =>
+        i === arrayIndex ? data : question
+      ),
+    });
   };
-
+  const addEmptyQuestion = () => {
+    setQuizInfo({
+      ...quizInfo,
+      questions: [...quizInfo?.questions, initalQuestion],
+    });
+  };
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
       <div className="bg-slate-200">
@@ -74,7 +86,7 @@ const QuizConfig = () => {
           <div className="flex justify-center">
             <button
               className=" py-1 px-6 hover:bg-red-200 hover"
-              onClick={() => addQuestion(initalQuestion)}
+              onClick={() => addEmptyQuestion()}
             >
               Add Question
             </button>
@@ -85,8 +97,9 @@ const QuizConfig = () => {
             <ShowAllQuestions />
           ) : (
             <QuizConfigItem
-              addQuestion={addQuestion}
+              updateQuestion={updateQuestion}
               questionInfo={questionInfo}
+              arrayIndex={arrayIndex}
             />
           )}
         </div>

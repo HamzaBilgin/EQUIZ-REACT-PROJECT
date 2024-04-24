@@ -20,51 +20,42 @@ const formItemLayout = {
     },
   },
 };
-const QuizConfigItem = ({ addQuestion, questionInfo }) => {
-  const { question, options } = questionInfo;
-  const [selectedOption, setSelectedOption] = useState("B");
-  const [questionOption, setQuestionOption] = useState([
-    { id: "A", value: "", correct: false },
-    { id: "B", value: "", correct: false },
-    { id: "C", value: "", correct: false },
-    { id: "D", value: "", correct: false },
-  ]);
+const QuizConfigItem = ({ updateQuestion, questionInfo, arrayIndex }) => {
+  const { question, options, correctOption } = questionInfo;
+
+  const [selectedOption, setSelectedOption] = useState("");
+  const [questionOption, setQuestionOption] = useState(options);
+  let initialValues = {
+    questionArea: question,
+  };
+
+  const [form] = Form.useForm(); // Access form methods
 
   useEffect(() => {
-    // const radioId = options?.find((item) => {
-    //   return item.correct === true;
-    // });
-    // setSelectedOption(radioId.id);
-    // setQuestionOption(options);
-  }, [options]);
-  //category area start
-  const categories = [
-    { label: "Türkçe", value: "turkce" },
-    { label: "Matematik", value: "matematik" },
-    { label: "Kimya", value: "kimya" },
-    { labe: "Fizik", value: "Fizik" },
-    { label: "Biyoloji", value: "biyoloji" },
-  ];
-  const { option } = Select;
-  //category area end
+    setQuestionOption(options);
+    form.setFieldsValue({
+      questionArea: question,
+      correctOption: correctOption,
+    });
+  }, [question, arrayIndex]);
 
   //handleSubmit area start
   const handleSubmit = (formValues) => {
-    const updatedOptions = questionOption.map((option) => {
-      if (option.id === selectedOption) {
-        return { ...option, correct: true };
-      } else {
-        return { ...option, correct: false };
-      }
-    });
-    const questionData = {
-      question: formValues.questionArea,
-      options: updatedOptions,
-    };
+    console.log(formValues);
+    const { questionArea, correctOption } = formValues;
 
-    addQuestion(questionData);
+    // const transformedArray = Object.keys(options).map((key) => ({
+    //   id: key,
+    //   value: options[key],
+    // }));
+    const questionData = {
+      question: questionArea,
+      options: questionOption,
+      correctOption: correctOption,
+    };
+    console.log(questionData);
+    updateQuestion(questionData);
   };
-  //handleSubmit area end
   const handleInputChange = (id, newValue) => {
     const newOptions = questionOption.map((option) => {
       if (option.id === id) {
@@ -78,15 +69,17 @@ const QuizConfigItem = ({ addQuestion, questionInfo }) => {
   return (
     <div>
       <Form
+        form={form}
         className="bg-red-300 w-[700px] h-[400px] p-2"
         {...formItemLayout}
+        initialValues={initialValues}
         variant="filled"
         onFinish={handleSubmit}
         style={{
           maxWidth: 600,
         }}
       >
-        <div className="text-center mb-3">1.Soru</div>
+        <div className="text-center mb-3">{`${arrayIndex + 1}.Soru`}</div>
         <Form.Item
           label="Question Area"
           name="questionArea"
@@ -95,42 +88,35 @@ const QuizConfigItem = ({ addQuestion, questionInfo }) => {
               required: true,
               message:
                 "Soru Alanı Boş Bırakılamaz ve 50 karakterden az olamaz!",
-              min: 50,
+              // min: 50,
             },
           ]}
         >
           <Input.TextArea />
         </Form.Item>
         <Form.Item
+          name="correctOption"
           label="Options"
-          style={{ marginBottom: 0 }} // Add margin bottom style
+          rules={[
+            {
+              required: true,
+              message:
+                "Soru Alanı Boş Bırakılamaz ve 50 karakterden az olamaz!",
+              // min: 50,
+            },
+          ]}
         >
-          <Radio.Group
-            name="radiogroup"
-            defaultValue={1}
-            value={selectedOption}
-            onChange={(e) => setSelectedOption(e.target.value)}
-          >
-            {questionOption.map((option) => (
+          <Radio.Group>
+            {questionOption.map((option, index) => (
               <Space key={option.id} style={{ marginBottom: 8 }}>
-                <Radio value={option.id}>{option.id}</Radio>
-                <Form.Item
-                  name={option.id}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Option cannot be empty!",
-                    },
-                  ]}
-                  style={{ marginBottom: 0 }} // Adjust width and add margin bottom style
-                >
+                <Radio key={index} value={option.id} className="h-8">
                   <Input
                     value={option.value}
                     onChange={(e) =>
                       handleInputChange(option.id, e.target.value)
                     }
                   />
-                </Form.Item>
+                </Radio>
               </Space>
             ))}
           </Radio.Group>
