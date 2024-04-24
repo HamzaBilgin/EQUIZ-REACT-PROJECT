@@ -1,10 +1,11 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "../../../FireBasee/Myfirebase";
 
 import QuizConfigItem from "./QuizConfigItem";
 import ShowAllQuestions from "./ShowAllQuestions";
+import { Button, Switch } from "antd";
 let initalQuestion = {
   question: "",
   options: [
@@ -31,6 +32,12 @@ const QuizConfig = () => {
 
     fetchData();
   }, []);
+  const onChange = (checked) => {
+    setQuizInfo({
+      ...quizInfo,
+      statu: checked,
+    });
+  };
   const handleLiCLick = (index) => {
     setShowAllQuestion(false);
     setQuestionInfo(quizInfo.questions[index]);
@@ -44,24 +51,53 @@ const QuizConfig = () => {
       ),
     });
   };
+  const deleteQuestion = (deleteIndex) => {
+    const updatedQuestions = quizInfo.questions.filter(
+      (_, index) => index !== deleteIndex
+    );
+    setQuizInfo({
+      ...quizInfo,
+      questions: updatedQuestions,
+    });
+  };
   const addEmptyQuestion = () => {
     setQuizInfo({
       ...quizInfo,
       questions: [...quizInfo?.questions, initalQuestion],
     });
   };
+  const saveQuiz = async () => {
+    const quizRef = doc(db, "quizzes", params.quizId);
+    await updateDoc(quizRef, quizInfo);
+  };
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
       <div className="bg-slate-200">
         <div className="flex justify-between">
-          <div className=" w-1/3">Category : Kimya</div>
-          <div className="text-center w-1/3">QUIZ NAME</div>
-          <div className="text-end w-1/3">Live Quiz Id : DAWDAWD</div>
+          <div className=" w-1/3">Category : {quizInfo.category}</div>
+          <div className="text-center w-1/3">{quizInfo.quizName}</div>
+          <div className="text-end w-1/3">
+            Live Quiz Id : {quizInfo.liveQuizId}
+          </div>
         </div>
 
         <div className="flex justify-around mt-5">
-          <div>Statu : False</div>
-          <div>Quiz Duration : 60dk</div>
+          <div className=" w-1/3">
+            Statu :
+            <Switch
+              checked={quizInfo.statu}
+              onChange={onChange}
+              className="ml-4"
+            />
+          </div>
+          <div className=" w-1/3 flex justify-center">
+            <Button type="primary" onClick={saveQuiz}>
+              Save Quiz
+            </Button>
+          </div>
+          <div className=" w-1/3 text-end">
+            Quiz Duration : {quizInfo.quizDuration}dk
+          </div>
         </div>
       </div>
       <div className="mt-5 flex">
@@ -92,14 +128,15 @@ const QuizConfig = () => {
             </button>
           </div>
         </div>
-        <div className="w-5/4 p-2">
+        <div className="w-5/6 p-2 ">
           {showAllQuestion ? (
-            <ShowAllQuestions />
+            <ShowAllQuestions quizInfo={quizInfo} />
           ) : (
             <QuizConfigItem
               updateQuestion={updateQuestion}
               questionInfo={questionInfo}
               arrayIndex={arrayIndex}
+              deleteQuestion={deleteQuestion}
             />
           )}
         </div>

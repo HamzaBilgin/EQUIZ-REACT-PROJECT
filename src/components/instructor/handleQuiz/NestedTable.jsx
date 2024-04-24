@@ -1,6 +1,6 @@
 import { Table, Badge, Menu, Button } from "antd";
 import { Link } from "react-router-dom";
-import Instructor from '../Instructor';
+import Instructor from "../Instructor";
 
 function NestedTable() {
   const expandedRowRender = () => {
@@ -23,7 +23,10 @@ function NestedTable() {
         key: "operation",
         render: () => (
           <span className="table-operation flex gap-2">
-            <Link to="/Instructor/quiz/detail" className=" text-green-600 border px-2 py-1 bg-slate-200 rounded-lg">
+            <Link
+              to="/Instructor/quiz/detail"
+              className=" text-green-600 border px-2 py-1 bg-slate-200 rounded-lg"
+            >
               View Details
             </Link>
           </span>

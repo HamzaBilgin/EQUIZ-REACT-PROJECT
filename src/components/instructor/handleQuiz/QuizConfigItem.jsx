@@ -20,7 +20,12 @@ const formItemLayout = {
     },
   },
 };
-const QuizConfigItem = ({ updateQuestion, questionInfo, arrayIndex }) => {
+const QuizConfigItem = ({
+  updateQuestion,
+  questionInfo,
+  arrayIndex,
+  deleteQuestion,
+}) => {
   const { question, options, correctOption } = questionInfo;
 
   const [selectedOption, setSelectedOption] = useState("");
@@ -41,19 +46,14 @@ const QuizConfigItem = ({ updateQuestion, questionInfo, arrayIndex }) => {
 
   //handleSubmit area start
   const handleSubmit = (formValues) => {
-    console.log(formValues);
     const { questionArea, correctOption } = formValues;
 
-    // const transformedArray = Object.keys(options).map((key) => ({
-    //   id: key,
-    //   value: options[key],
-    // }));
     const questionData = {
       question: questionArea,
       options: questionOption,
       correctOption: correctOption,
     };
-    console.log(questionData);
+
     updateQuestion(questionData);
   };
   const handleInputChange = (id, newValue) => {
@@ -110,12 +110,15 @@ const QuizConfigItem = ({ updateQuestion, questionInfo, arrayIndex }) => {
             {questionOption.map((option, index) => (
               <Space key={option.id} style={{ marginBottom: 8 }}>
                 <Radio key={index} value={option.id} className="h-8">
-                  <Input
-                    value={option.value}
-                    onChange={(e) =>
-                      handleInputChange(option.id, e.target.value)
-                    }
-                  />
+                  <div className="flex items-center ">
+                    <div className="mr-4  w-6">{option.id} :</div>
+                    <Input
+                      value={option.value}
+                      onChange={(e) =>
+                        handleInputChange(option.id, e.target.value)
+                      }
+                    />
+                  </div>
                 </Radio>
               </Space>
             ))}
@@ -123,12 +126,14 @@ const QuizConfigItem = ({ updateQuestion, questionInfo, arrayIndex }) => {
         </Form.Item>
         <Form.Item
           wrapperCol={{
-            offset: 14,
+            offset: 10,
             span: 4,
           }}
         >
           <Space>
-            <Button>Cancel</Button>
+            <Button onClick={() => deleteQuestion(arrayIndex)}>
+              Delete Question
+            </Button>
             <Button type="default" htmlType="submit">
               Add Question
             </Button>

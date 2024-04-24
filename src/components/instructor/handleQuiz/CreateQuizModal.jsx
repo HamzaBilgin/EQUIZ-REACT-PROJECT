@@ -52,15 +52,10 @@ const CreateQuizModal = ({ handleCancel }) => {
       liveQuizId: randomData,
       createdAt: now,
       questions: [],
+      statu: false,
     });
     console.log(docRef.id);
     navigate(`/instructor/${docRef.id}/makeQuizConfig`);
-    // const questionData = {
-    //   category: formValues.category,
-    //   question: formValues.questionArea,
-    //   options: questionOption,
-    // };
-    // onsubmit(questionData);
   };
   //handleSubmit area end
   const handleInputChange = (id, newValue) => {
