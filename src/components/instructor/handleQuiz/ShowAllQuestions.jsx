@@ -6,8 +6,6 @@ const text = `
   it can be found as a welcome guest in many households across the world.
 `;
 const ShowAllQuestions = ({ quizInfo }) => {
-  console.log(quizInfo);
-
   return (
     <>
       {quizInfo?.questions?.length === 0 ? (

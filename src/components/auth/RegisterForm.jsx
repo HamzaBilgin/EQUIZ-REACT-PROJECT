@@ -63,7 +63,6 @@ const RegisterForm = () => {
 
   //Hatalı durularda modal text i revize eder
   function handleRegistrationError(error) {
-    console.log(error);
     switch (error.code) {
       case "auth/email-already-in-use":
         errorModalModify("Email already in use");

@@ -6,6 +6,11 @@ import db from "../../../FireBasee/Myfirebase";
 import QuizConfigItem from "./QuizConfigItem";
 import ShowAllQuestions from "./ShowAllQuestions";
 import { Button, Switch } from "antd";
+import QuizSubmit from "./QuizSubmit";
+import {
+  getQuizInfo,
+  updateQuizInfo,
+} from "../../../actions/quizActions/quizActions";
 let initalQuestion = {
   question: "",
   options: [
@@ -25,25 +30,25 @@ const QuizConfig = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const docRef = doc(db, "quizzes", params.quizId);
-      const docSnap = await getDoc(docRef);
-      setQuizInfo(docSnap.data());
+      const dbdata = await getQuizInfo(params.quizId);
+      setQuizInfo(dbdata);
     };
 
     fetchData();
   }, []);
-  const onChange = (checked) => {
-    setQuizInfo({
-      ...quizInfo,
-      statu: checked,
-    });
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await updateQuizInfo(params.quizId, quizInfo);
+    };
+    fetchData();
+  }, [quizInfo]);
+
   const handleLiCLick = (index) => {
     setShowAllQuestion(false);
     setQuestionInfo(quizInfo.questions[index]);
     setArrayIndex(index);
   };
-  const updateQuestion = (data) => {
+  const updateQuestionArray = (data) => {
     setQuizInfo({
       ...quizInfo,
       questions: quizInfo.questions.map((question, i) =>
@@ -70,35 +75,21 @@ const QuizConfig = () => {
     const quizRef = doc(db, "quizzes", params.quizId);
     await updateDoc(quizRef, quizInfo);
   };
+  const updateQuiz = async (value) => {
+    setQuizInfo({
+      ...quizInfo,
+      ...value,
+    });
+  };
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
-      <div className="bg-slate-200">
-        <div className="flex justify-between">
-          <div className=" w-1/3">Category : {quizInfo.category}</div>
-          <div className="text-center w-1/3">{quizInfo.quizName}</div>
-          <div className="text-end w-1/3">
-            Live Quiz Id : {quizInfo.liveQuizId}
-          </div>
+      <div className="bg-slate-200 flex justify-between">
+        <div className="h-16 w-1/3"></div>
+        <div className="h-16 w-1/3  flex justify-center items-center">
+          {quizInfo.quizName}
         </div>
 
-        <div className="flex justify-around mt-5">
-          <div className=" w-1/3">
-            Statu :
-            <Switch
-              checked={quizInfo.statu}
-              onChange={onChange}
-              className="ml-4"
-            />
-          </div>
-          <div className=" w-1/3 flex justify-center">
-            <Button type="primary" onClick={saveQuiz}>
-              Save Quiz
-            </Button>
-          </div>
-          <div className=" w-1/3 text-end">
-            Quiz Duration : {quizInfo.quizDuration}dk
-          </div>
-        </div>
+        <div className="h-16 w-1/3 text-end">{`Live Quiz Id : ${quizInfo.liveQuizId}`}</div>
       </div>
       <div className="mt-5 flex">
         <div className="bg-slate-200 w-1/6 ">
@@ -128,17 +119,24 @@ const QuizConfig = () => {
             </button>
           </div>
         </div>
-        <div className="w-5/6 p-2 ">
+        <div className="w-3/6 p-2 ">
           {showAllQuestion ? (
             <ShowAllQuestions quizInfo={quizInfo} />
           ) : (
             <QuizConfigItem
-              updateQuestion={updateQuestion}
+              updateQuestionArray={updateQuestionArray}
               questionInfo={questionInfo}
               arrayIndex={arrayIndex}
               deleteQuestion={deleteQuestion}
             />
           )}
+        </div>
+        <div className="w-2/6 p-2 bg-red-200">
+          <QuizSubmit
+            setQuizInfo={setQuizInfo}
+            quizInfo={quizInfo}
+            saveQuiz={saveQuiz}
+          />
         </div>
       </div>
     </div>

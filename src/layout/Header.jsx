@@ -2,10 +2,13 @@ import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Dropdown, Space } from "antd";
 import React, { useEffect, useState } from "react";
 import { render } from "react-dom";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { userInfoActions } from "../store/slice/userInfoSlice";
+import { authActions } from "../store/slice/authSlice";
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [homeUrl, setHomeUrl] = useState("");
   const userInfo = useSelector((state) => state.userInfoReducer.userInfo);
   useEffect(() => {
@@ -19,6 +22,13 @@ const Header = () => {
       setHomeUrl(`/`);
     }
   }, []);
+  const logout = () => {
+    dispatch(authActions.logout());
+    dispatch(userInfoActions.setUserInfo([]));
+
+    localStorage.clear();
+    navigate(`/`);
+  };
   const items = [
     {
       key: "1",
@@ -27,6 +37,10 @@ const Header = () => {
           <span>Change Password</span>
         </Link>
       ),
+    },
+    {
+      key: "2",
+      label: <div onClick={logout}>Logout</div>,
     },
   ];
   return (

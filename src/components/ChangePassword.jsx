@@ -61,30 +61,6 @@ const ChangePassword = () => {
         },
       });
     }
-    // user
-    //   .reauthenticateWithCredential(credential)
-    //   .then(() => {
-    //     // Yeni şifreyle kullanıcının şifresini güncelle
-    //     user
-    //       .updatePassword(values.newPassword)
-    //       .then(() => {
-    //         console.log("Şifre başarıyla değiştirildi.");
-    //       })
-    //       .catch((error) => {
-    //         console.error("Şifre değiştirme hatası:", error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     console.error("Yeniden doğrulama hatası:", error);
-    //   });
-    // user
-    //   .updatePassword(values.newPassword)
-    //   .then(() => {
-    //     console.log("Şifre başarıyla değiştirildi.");
-    //   })
-    //   .catch((error) => {
-    //     console.error("Şifre değiştirme hatası:", error);
-    //   });
   };
 
   const handleSubmit = () => {

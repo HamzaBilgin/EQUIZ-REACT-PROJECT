@@ -1,4 +1,4 @@
-import {React,useState} from "react";
+import { React, useState } from "react";
 import { Button, Table } from "antd";
 
 const data = [
@@ -32,7 +32,6 @@ const ResultTable = () => {
   const [sortedInfo, setSortedInfo] = useState(null);
 
   const handleChange = (pagination, filters, sorter) => {
-    console.log("Various parameters", pagination, filters, sorter);
     setFilteredInfo(filters);
     setSortedInfo(sorter);
   };

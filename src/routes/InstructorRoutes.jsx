@@ -16,7 +16,8 @@ const InstructorRoutes = [
     children: [
       {
         path: ":instructorId",
-        element: <HomePage layout={"instructor"} />,
+        // element: <HomePage layout={"instructor"} />,
+        element: <Quiz />,
       },
       { path: "lesson/:categoryName", element: <Lesson /> },
       { path: "quiz/detail", element: <QuizDetail /> },

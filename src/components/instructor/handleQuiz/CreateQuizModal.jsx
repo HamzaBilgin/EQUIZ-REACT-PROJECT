@@ -2,8 +2,9 @@ import { React, useState } from "react";
 import { Form, Input, Radio, Space, Button, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc } from "firebase/firestore";
 import db from "../../../FireBasee/Myfirebase";
+import { useSelector } from "react-redux";
 
 const formItemLayout = {
   labelCol: {
@@ -25,12 +26,7 @@ const formItemLayout = {
 };
 const CreateQuizModal = ({ handleCancel }) => {
   const navigate = useNavigate();
-  const [questionOption, setQuestionOption] = useState([
-    { id: "A", value: "", correct: false },
-    { id: "B", value: "", correct: false },
-    { id: "C", value: "", correct: false },
-    { id: "D", value: "", correct: false },
-  ]);
+  const userInfo = useSelector((state) => state.userInfoReducer.userInfo);
   //category area start
   const categories = [
     { label: "Türkçe", value: "turkce" },
@@ -44,7 +40,6 @@ const CreateQuizModal = ({ handleCancel }) => {
 
   //handleSubmit area start
   const handleSubmit = async ({ makeQuiz }) => {
-    console.log(makeQuiz);
     const randomData = generateRandomData();
     const now = new Date();
     const docRef = await addDoc(collection(db, "quizzes"), {
@@ -53,20 +48,12 @@ const CreateQuizModal = ({ handleCancel }) => {
       createdAt: now,
       questions: [],
       statu: false,
+      instructorId: doc(db, "users", userInfo.uid),
     });
-    console.log(docRef.id);
+
     navigate(`/instructor/${docRef.id}/makeQuizConfig`);
   };
-  //handleSubmit area end
-  const handleInputChange = (id, newValue) => {
-    const newOptions = questionOption.map((option) => {
-      if (option.id === id) {
-        return { ...option, value: newValue };
-      }
-      return option;
-    });
-    setQuestionOption(newOptions);
-  };
+
   function generateRandomData() {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -101,17 +88,7 @@ const CreateQuizModal = ({ handleCancel }) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name={["makeQuiz", "quizDuration"]}
-        label="Quiz Duration(dk)"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Input type="number" />
-      </Form.Item>
+
       <Form.Item
         label="Category"
         name={["makeQuiz", "category"]}

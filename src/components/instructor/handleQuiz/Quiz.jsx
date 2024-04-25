@@ -1,8 +1,8 @@
 import { React, useState } from "react";
 import { Button, Card, Modal } from "antd";
-import QuizQuestion from "./QuizQuestion";
-import NestedTable from "./NestedTable";
+
 import CreateQuizModal from "./CreateQuizModal";
+import QuizList from "./QuizList";
 
 const quizOperations = [
   {
@@ -10,16 +10,16 @@ const quizOperations = [
     img: "https://static.vecteezy.com/system/resources/thumbnails/005/083/209/small_2x/editable-flat-outline-design-of-quiz-icon-vector.jpg",
     title: "Create New Quiz",
   },
-  {
-    id: 2,
-    img: "https://cdn-icons-png.freepik.com/512/10650/10650201.png",
-    title: "Edit Quiz",
-  },
-  {
-    id: 3,
-    img: "https://cdn-icons-png.freepik.com/512/10781/10781634.png",
-    title: "Delete Quiz",
-  },
+  // {
+  //   id: 2,
+  //   img: "https://cdn-icons-png.freepik.com/512/10650/10650201.png",
+  //   title: "Edit Quiz",
+  // },
+  // {
+  //   id: 3,
+  //   img: "https://cdn-icons-png.freepik.com/512/10781/10781634.png",
+  //   title: "Delete Quiz",
+  // },
 ];
 
 const Quiz = () => {
@@ -65,19 +65,9 @@ const Quiz = () => {
           footer={null}
         >
           <CreateQuizModal handleCancel={handleCancel} />
-          {/* <QuizQuestion handleCancel={handleCancel} /> */}
         </Modal>
-        {/* <Modal
-          title="Creaet New Quiz"
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={null}
-        >
-          <QuizQuestion handleCancel={handleCancel} />
-        </Modal> */}
       </div>
-      <NestedTable />
+      <QuizList />
     </div>
   );
 };
