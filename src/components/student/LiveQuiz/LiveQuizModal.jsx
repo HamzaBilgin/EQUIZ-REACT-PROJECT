@@ -1,7 +1,10 @@
 import { Button, Form, Input, Select, Space, message } from "antd";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import React, { useState } from "react";
 import db from "../../../FireBasee/Myfirebase";
+import { quizInfoActions } from "../../../store/slice/quizInfoSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -22,11 +25,46 @@ const formItemLayout = {
 };
 const LiveQuizModal = ({ handleCancel }) => {
   const [messageApi, contextHolder] = message.useMessage();
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const onFinish = ({ requestLiveQuizId }) => {
-    console.log(requestLiveQuizId);
     findQuiz(requestLiveQuizId)
-      .then((data) => {})
+      .then((data) => {
+        console.log(data.docs[0].data());
+        const {
+          createdAt,
+          endingAt,
+          category,
+          liveQuizId,
+          questions,
+          quizDuration,
+          statu,
+          instructorId,
+          startAt,
+        } = data.docs[0].data();
+        dispatch(
+          quizInfoActions.setQuizInfo({
+            uid: data.docs[0].id,
+            instructorId: instructorId.id,
+            questions: questions,
+            quizDuration: quizDuration,
+            startAt: startAt,
+          })
+        );
+        localStorage.setItem(
+          "quizInfo",
+          JSON.stringify({
+            uid: data.docs[0].id,
+            instructorId: instructorId.id,
+            questions: questions,
+            quizDuration: quizDuration,
+            startAt: startAt,
+          })
+        );
+        navigate(
+          `/student/liveQuiz/${category}/${liveQuizId}/${questions.length}`
+        );
+      })
       .catch((err) => {
         messageApi.open({
           type: "error",
@@ -40,9 +78,15 @@ const LiveQuizModal = ({ handleCancel }) => {
     const quizzesSnapshot = await getDocs(stateQuery);
 
     const docsLenght = quizzesSnapshot.docs.length;
+
+    // const q = query(
+    //   collection(db, "quizzesUsers"),
+    //   where("quizId", "==", doc(db, "quizzes", quizzesSnapshot.docs[0].id))
+    // );
+    // const querySnapshot = await getDocs(q);
     return new Promise((resolve, reject) => {
       if (docsLenght === 1) {
-        resolve("Giriş başarılı");
+        resolve(quizzesSnapshot);
       } else {
         reject("Beklenmeyen hata");
       }
