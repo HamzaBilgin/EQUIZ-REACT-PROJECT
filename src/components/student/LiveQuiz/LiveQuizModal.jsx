@@ -5,6 +5,7 @@ import db from "../../../FireBasee/Myfirebase";
 import { quizInfoActions } from "../../../store/slice/quizInfoSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getQuizzesUsersByQuizId } from "../../../actions/quizActions/quizActions";
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -30,7 +31,6 @@ const LiveQuizModal = ({ handleCancel }) => {
   const onFinish = ({ requestLiveQuizId }) => {
     findQuiz(requestLiveQuizId)
       .then((data) => {
-        console.log(data.docs[0].data());
         const {
           createdAt,
           endingAt,
@@ -79,18 +79,42 @@ const LiveQuizModal = ({ handleCancel }) => {
 
     const docsLenght = quizzesSnapshot.docs.length;
 
-    // const q = query(
-    //   collection(db, "quizzesUsers"),
-    //   where("quizId", "==", doc(db, "quizzes", quizzesSnapshot.docs[0].id))
-    // );
-    // const querySnapshot = await getDocs(q);
     return new Promise((resolve, reject) => {
       if (docsLenght === 1) {
-        resolve(quizzesSnapshot);
+        findUserAttendQuiz(quizzesSnapshot.docs[0]?.id, studentId)
+          .then((isExisting) => {
+            if (isExisting !== null) {
+              reject("Sınav sonucunuz mevcuttur");
+            } else {
+              resolve(quizzesSnapshot);
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
       } else {
-        reject("Beklenmeyen hata");
+        reject("Quiz Bulunamadı");
       }
     });
+  };
+  const findUserAttendQuiz = async (quizId, studentId) => {
+    let isExistQuizResult = null;
+    const quizzesUsersRef = collection(db, "quizzesUsers");
+    const stateQuery2 = query(
+      quizzesUsersRef,
+      where("quizId", "==", doc(db, "quizzes", quizId))
+    );
+    const quizzesUsersSnapshot = await getDocs(stateQuery2);
+    console.log(quizzesUsersSnapshot);
+    for (const doc of quizzesUsersSnapshot.docs) {
+      const usersAnswer = doc.data().usersAnswer;
+      if (usersAnswer) {
+        isExistQuizResult = usersAnswer.find(
+          (item) => item.studentId === studentId
+        );
+      }
+    }
+    return isExistQuizResult;
   };
   return (
     <div>

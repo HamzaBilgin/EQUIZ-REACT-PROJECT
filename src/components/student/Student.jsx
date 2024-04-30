@@ -2,6 +2,7 @@ import { Button, Card, Modal } from "antd";
 import React, { useState } from "react";
 import CreateQuizModal from "../instructor/handleQuiz/CreateQuizModal";
 import LiveQuizModal from "./LiveQuiz/LiveQuizModal";
+import QuizList from "./QuizList";
 const quizOperations = [
   {
     id: 1,
@@ -65,6 +66,7 @@ const Student = () => {
           <LiveQuizModal handleCancel={handleCancel} />
         </Modal>
       </div>
+      <QuizList />
     </div>
   );
 };

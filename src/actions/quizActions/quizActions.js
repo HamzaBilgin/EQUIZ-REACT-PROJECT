@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -36,18 +37,50 @@ const getAllQuizByInstructorId = async (instructorId) => {
     where("instructorId", "==", doc(db, "users", instructorId))
   );
   const querySnapshot = await getDocs(q);
-  let loadedProducts = [];
+  let loadedQuery = [];
   querySnapshot.forEach((doc) => {
-    loadedProducts.push({ id: doc.id, ...doc.data() });
+    loadedQuery.push({ id: doc.id, ...doc.data() });
   });
-  return loadedProducts;
+  return loadedQuery;
 };
 const deleteQuizById = async (id) => {
   await deleteDoc(doc(db, "quizzes", id));
+};
+const firstCommitToQuizzesUsers = async (quizId, instructorId) => {
+  const docRef = await addDoc(collection(db, "quizzesUsers"), {
+    quizId: doc(db, "quizzes", quizId),
+    instructorId: doc(db, "users", instructorId),
+  });
+};
+const deleteQuizzesUsers = async (quizId) => {
+  const q = query(
+    collection(db, "quizzesUsers"),
+    where("quizId", "==", doc(db, "quizzes", quizId))
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    deleteDoc(doc.ref);
+  });
+};
+const getQuizzesUsersByQuizId = async (uid) => {
+  const quizzesUsersRef = collection(db, "quizzesUsers");
+  const stateQuery = query(
+    quizzesUsersRef,
+    where("quizId", "==", doc(db, "quizzes", uid))
+  );
+  const querySnapshot = await getDocs(stateQuery);
+  let loadedQuery = [];
+  querySnapshot.forEach((doc) => {
+    loadedQuery.push({ id: doc.id, ...doc.data() });
+  });
+  return loadedQuery;
 };
 export {
   getQuizInfo,
   updateQuizInfo,
   getAllQuizByInstructorId,
   deleteQuizById,
+  firstCommitToQuizzesUsers,
+  deleteQuizzesUsers,
+  getQuizzesUsersByQuizId,
 };

@@ -1,3 +1,4 @@
+import QuizResult from "../components/QuizResult";
 import LiveQuiz from "../components/student/LiveQuiz/LiveQuiz";
 import UserLayout from "../layout/UserLayout";
 import ErrorPage from "../pages/ErrorPage";
@@ -16,6 +17,10 @@ const StudentRoutes = [
       {
         path: "liveQuiz/:categoryName/:id/:totalQuestions",
         element: <LiveQuiz />,
+      },
+      {
+        path: "quiz/result",
+        element: <QuizResult />,
       },
     ],
   },

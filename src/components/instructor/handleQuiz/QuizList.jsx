@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import {
   deleteQuizById,
+  deleteQuizzesUsers,
   getAllQuizByInstructorId,
 } from "../../../actions/quizActions/quizActions";
 import { useEffect, useRef, useState } from "react";
@@ -42,6 +43,7 @@ const QuizList = () => {
   }, []);
   const deletee = (item) => {
     deleteQuizById(item.key);
+    deleteQuizzesUsers(item.key);
     const updatedQuiz = dbQuizList.filter((quiz) => quiz.key !== item.key);
     setDbQuizList(updatedQuiz);
   };

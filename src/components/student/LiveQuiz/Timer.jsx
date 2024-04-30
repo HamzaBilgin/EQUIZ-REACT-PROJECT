@@ -4,6 +4,9 @@ const Timer = ({ quizInfo, setFinishQuiz }) => {
   const now = new Date();
   const startAt = new Date(quizInfo.startAt);
 
+  // startAt'a quizInfo.quizDuration dakika ekle
+  startAt.setMinutes(startAt.getMinutes() + quizInfo.quizDuration);
+
   const getTimeLeft = () => {
     const difference = startAt.getTime() - now.getTime();
 

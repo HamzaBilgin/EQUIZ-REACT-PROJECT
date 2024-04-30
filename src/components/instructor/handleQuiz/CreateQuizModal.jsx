@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { addDoc, collection, doc } from "firebase/firestore";
 import db from "../../../FireBasee/Myfirebase";
 import { useSelector } from "react-redux";
+import { firstCommitToQuizzesUsers } from "../../../actions/quizActions/quizActions";
 
 const formItemLayout = {
   labelCol: {
@@ -50,7 +51,7 @@ const CreateQuizModal = ({ handleCancel }) => {
       statu: false,
       instructorId: doc(db, "users", userInfo.uid),
     });
-
+    firstCommitToQuizzesUsers(docRef.id, userInfo.uid);
     navigate(`/instructor/${docRef.id}/makeQuizConfig`);
   };
 
