@@ -11,6 +11,11 @@ import {
 } from "firebase/firestore";
 import db from "../../FireBasee/Myfirebase";
 
+const addQuiz = async (data) => {
+  const docref = await addDoc(collection(db, "quizzes"), data);
+  return docref.id;
+};
+
 const getQuizInfo = async (quizId) => {
   try {
     const docRef = doc(db, "quizzes", quizId);
@@ -46,12 +51,12 @@ const getAllQuizByInstructorId = async (instructorId) => {
 const deleteQuizById = async (id) => {
   await deleteDoc(doc(db, "quizzes", id));
 };
-const firstCommitToQuizzesUsers = async (quizId, instructorId) => {
-  const docRef = await addDoc(collection(db, "quizzesUsers"), {
-    quizId: doc(db, "quizzes", quizId),
-    instructorId: doc(db, "users", instructorId),
-  });
-};
+// const firstCommitToQuizzesUsers = async (quizId, instructorId) => {
+//   const docRef = await addDoc(collection(db, "quizzesUsers"), {
+//     quizId: doc(db, "quizzes", quizId),
+//     instructorId: doc(db, "users", instructorId),
+//   });
+// };
 const deleteQuizzesUsers = async (quizId) => {
   const q = query(
     collection(db, "quizzesUsers"),
@@ -76,11 +81,11 @@ const getQuizzesUsersByQuizId = async (uid) => {
   return loadedQuery;
 };
 export {
+  addQuiz,
   getQuizInfo,
   updateQuizInfo,
   getAllQuizByInstructorId,
   deleteQuizById,
-  firstCommitToQuizzesUsers,
   deleteQuizzesUsers,
   getQuizzesUsersByQuizId,
 };

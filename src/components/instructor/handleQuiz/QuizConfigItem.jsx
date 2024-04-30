@@ -34,24 +34,26 @@ const QuizConfigItem = ({
     questionArea: question,
   };
 
-  const [form] = Form.useForm(); // Access form methods
+  const [form] = Form.useForm();
 
   useEffect(() => {
     setQuestionOption(options);
     form.setFieldsValue({
       questionArea: question,
-      correctOption: correctOption,
+      correctOption: correctOption.id,
     });
   }, [question, arrayIndex]);
 
   //handleSubmit area start
   const handleSubmit = (formValues) => {
     const { questionArea, correctOption } = formValues;
-
+    const correctOptionObject = questionOption.find((option) => {
+      return option.id === correctOption;
+    });
     const questionData = {
       question: questionArea,
       options: questionOption,
-      correctOption: correctOption,
+      correctOption: correctOptionObject,
     };
 
     updateQuestionArray(questionData);

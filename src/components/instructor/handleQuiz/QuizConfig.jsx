@@ -75,12 +75,7 @@ const QuizConfig = () => {
     const quizRef = doc(db, "quizzes", params.quizId);
     await updateDoc(quizRef, quizInfo);
   };
-  const updateQuiz = async (value) => {
-    setQuizInfo({
-      ...quizInfo,
-      ...value,
-    });
-  };
+
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
       <div className="bg-slate-200 flex justify-between">

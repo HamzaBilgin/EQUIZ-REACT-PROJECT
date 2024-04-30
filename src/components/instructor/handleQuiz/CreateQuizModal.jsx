@@ -1,11 +1,10 @@
-import { React, useState } from "react";
-import { Form, Input, Radio, Space, Button, Select } from "antd";
+import { Form, Input, Space, Button, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { useNavigate } from "react-router-dom";
-import { addDoc, collection, doc } from "firebase/firestore";
+import { doc } from "firebase/firestore";
 import db from "../../../FireBasee/Myfirebase";
 import { useSelector } from "react-redux";
-import { firstCommitToQuizzesUsers } from "../../../actions/quizActions/quizActions";
+import { addQuiz } from "../../../actions/quizActions/quizActions";
 
 const formItemLayout = {
   labelCol: {
@@ -43,16 +42,16 @@ const CreateQuizModal = ({ handleCancel }) => {
   const handleSubmit = async ({ makeQuiz }) => {
     const randomData = generateRandomData();
     const now = new Date();
-    const docRef = await addDoc(collection(db, "quizzes"), {
+    const data = {
       ...makeQuiz,
       liveQuizId: randomData,
       createdAt: now,
       questions: [],
       statu: false,
       instructorId: doc(db, "users", userInfo.uid),
-    });
-    firstCommitToQuizzesUsers(docRef.id, userInfo.uid);
-    navigate(`/instructor/${docRef.id}/makeQuizConfig`);
+    };
+    const quizId = await addQuiz(data);
+    navigate(`/instructor/${quizId}/makeQuizConfig`);
   };
 
   function generateRandomData() {
@@ -60,7 +59,7 @@ const CreateQuizModal = ({ handleCancel }) => {
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let result = "";
     const charactersLength = characters.length;
-    const length = 8; // 8 haneli olacak
+    const length = 8;
 
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
