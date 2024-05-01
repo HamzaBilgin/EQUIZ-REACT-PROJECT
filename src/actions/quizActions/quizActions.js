@@ -15,7 +15,15 @@ const addQuiz = async (data) => {
   const docref = await addDoc(collection(db, "quizzes"), data);
   return docref.id;
 };
-
+const addQuizzesUsers = async (quizId, instructorId, studentId) => {
+  const data = {
+    quizId: doc(db, "quizzes", quizId),
+    instructorId: doc(db, "users", instructorId),
+    studentId: doc(db, "users", studentId),
+  };
+  const docref = await addDoc(collection(db, "quizzesUsers"), data);
+  return docref.id;
+};
 const getQuizInfo = async (quizId) => {
   try {
     const docRef = doc(db, "quizzes", quizId);
@@ -67,6 +75,16 @@ const deleteQuizzesUsers = async (quizId) => {
     deleteDoc(doc.ref);
   });
 };
+const getQuizzesUsersByQuizAndStudentId = async (quizId, studentId) => {
+  const quizzesUsersRef = collection(db, "quizzesUsers");
+  const stateQuery2 = query(
+    quizzesUsersRef,
+    where("quizId", "==", doc(db, "quizzes", quizId)),
+    where("studentId", "==", doc(db, "users", studentId))
+  );
+  const quizzesUsersSnapshot = await getDocs(stateQuery2);
+  return quizzesUsersSnapshot;
+};
 const getQuizzesUsersByQuizId = async (uid) => {
   const quizzesUsersRef = collection(db, "quizzesUsers");
   const stateQuery = query(
@@ -80,12 +98,28 @@ const getQuizzesUsersByQuizId = async (uid) => {
   });
   return loadedQuery;
 };
+const getAllQuizzesByStudentId = async (studentId) => {
+  const quizzesUsersRef = collection(db, "quizzesUsers");
+  const stateQuery = query(
+    quizzesUsersRef,
+    where("studentId", "==", doc(db, "users", studentId))
+  );
+  const querySnapshot = await getDocs(stateQuery);
+  let loadedQuery = [];
+  querySnapshot.forEach((doc) => {
+    loadedQuery.push({ id: doc.id, ...doc.data() });
+  });
+  return loadedQuery;
+};
 export {
   addQuiz,
+  addQuizzesUsers,
   getQuizInfo,
   updateQuizInfo,
   getAllQuizByInstructorId,
   deleteQuizById,
   deleteQuizzesUsers,
   getQuizzesUsersByQuizId,
+  getQuizzesUsersByQuizAndStudentId,
+  getAllQuizzesByStudentId,
 };

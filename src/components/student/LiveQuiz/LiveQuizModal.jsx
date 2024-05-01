@@ -3,9 +3,12 @@ import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import React, { useState } from "react";
 import db from "../../../FireBasee/Myfirebase";
 import { quizInfoActions } from "../../../store/slice/quizInfoSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getQuizzesUsersByQuizId } from "../../../actions/quizActions/quizActions";
+import {
+  getQuizzesUsersByQuizAndStudentId,
+  getQuizzesUsersByQuizId,
+} from "../../../actions/quizActions/quizActions";
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -25,11 +28,12 @@ const formItemLayout = {
   },
 };
 const LiveQuizModal = ({ handleCancel }) => {
+  const userInfo = useSelector((state) => state.userInfoReducer.userInfo);
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onFinish = ({ requestLiveQuizId }) => {
-    findQuiz(requestLiveQuizId)
+    findQuiz(requestLiveQuizId, userInfo.uid)
       .then((data) => {
         const {
           createdAt,
@@ -83,7 +87,7 @@ const LiveQuizModal = ({ handleCancel }) => {
       if (docsLenght === 1) {
         findUserAttendQuiz(quizzesSnapshot.docs[0]?.id, studentId)
           .then((isExisting) => {
-            if (isExisting !== null) {
+            if (isExisting === true) {
               reject("Sınav sonucunuz mevcuttur");
             } else {
               resolve(quizzesSnapshot);
@@ -98,22 +102,27 @@ const LiveQuizModal = ({ handleCancel }) => {
     });
   };
   const findUserAttendQuiz = async (quizId, studentId) => {
-    let isExistQuizResult = null;
-    const quizzesUsersRef = collection(db, "quizzesUsers");
-    const stateQuery2 = query(
-      quizzesUsersRef,
-      where("quizId", "==", doc(db, "quizzes", quizId))
-    );
-    const quizzesUsersSnapshot = await getDocs(stateQuery2);
-    console.log(quizzesUsersSnapshot);
-    for (const doc of quizzesUsersSnapshot.docs) {
-      const usersAnswer = doc.data().usersAnswer;
-      if (usersAnswer) {
-        isExistQuizResult = usersAnswer.find(
-          (item) => item.studentId === studentId
-        );
-      }
+    // console.log(studentId);
+    let isExistQuizResult = false;
+    // const quizzesUsersRef = collection(db, "quizzesUsers");
+    // const stateQuery2 = query(
+    //   quizzesUsersRef,
+    //   where("quizId", "==", doc(db, "quizzes", quizId)),
+    //   where("studentId", "==", doc(db, "users", studentId))
+    // );
+    // const quizzesUsersSnapshot = await getDocs(stateQuery2);
+    const data = await getQuizzesUsersByQuizAndStudentId(quizId, studentId);
+    if (data.empty === false) {
+      isExistQuizResult = true;
     }
+    // for (const doc of quizzesUsersSnapshot.docs) {
+    //   const usersAnswer = doc.data().usersAnswer;
+    //   if (usersAnswer) {
+    //     isExistQuizResult = usersAnswer.find(
+    //       (item) => item.studentId === studentId
+    //     );
+    //   }
+    // }
     return isExistQuizResult;
   };
   return (

@@ -23,12 +23,12 @@ const QuizResult = () => {
       const correctQ = [];
       const wrongQ = [];
 
-      // Her bir soru için kontrol yap
       let wrongCount = 0;
+
       questionsAnswer.forEach((question, index) => {
-        if (question.answer.id === null) {
-          emptyQ.push({ ...question, questionNo: index });
-        } else if (question.answer.id === question.correctAnswer) {
+        if (question.answer?.id === undefined) {
+          emptyQ.push({ ...question, answer: "No Answer", questionNo: index });
+        } else if (question.answer?.id === question.correctOption?.id) {
           correctQ.push({ ...question, questionNo: index });
         } else {
           wrongQ.push({ ...question, questionNo: index });
@@ -38,7 +38,9 @@ const QuizResult = () => {
 
       // İstatistik verilerini güncelle
       setTotalQuestions(questionsAnswer.length);
-      setCorrectPercentage((correctQ.length / totalQuestions) * 100);
+      setCorrectPercentage(
+        ((correctQ.length / totalQuestions) * 100).toFixed(2)
+      );
       setWrongPercentage((wrongCount / totalQuestions) * 100);
       setElapsedTimePercentage(
         ((elapsedTime / quizTimer / 60) * 100).toFixed(2)
@@ -82,18 +84,22 @@ const QuizResult = () => {
           ...initial.children,
           {
             title: `Question : ${questionNo}`,
-            key: index,
+            key: questionNo,
             icon: <CarryOutOutlined />,
             children: [
               {
                 title: (
                   <>
                     <div>{question}</div>
-                    <div>{`Correct answer : ${correctOption}`}</div>
-                    <div>{`Your answer : ${answer.id}) ${answer.value}`}</div>
+                    <div>{`Correct answer : ${correctOption.id}) ${correctOption.value}`}</div>
+                    <div>{`Your answer :  ${
+                      answer.id === undefined
+                        ? answer
+                        : `${answer.id}) ${answer.value}`
+                    }`}</div>
                   </>
                 ),
-                key: `${question}-${question}`,
+                key: `${questionNo}-${questionNo}`,
               },
             ],
           },

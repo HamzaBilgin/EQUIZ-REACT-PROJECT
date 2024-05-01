@@ -8,13 +8,18 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   query,
   runTransaction,
   where,
 } from "firebase/firestore";
 import db from "../../../FireBasee/Myfirebase";
-import { getQuizzesUsersByQuizId } from "../../../actions/quizActions/quizActions";
+import {
+  addQuizzesUsers,
+  getQuizzesUsersByQuizAndStudentId,
+  getQuizzesUsersByQuizId,
+} from "../../../actions/quizActions/quizActions";
 import { useNavigate } from "react-router-dom";
 const LiveQuiz = () => {
   const [count, setCount] = useState(0);
@@ -27,20 +32,25 @@ const LiveQuiz = () => {
   const [modalText, setModalText] = useState("Content of the modal");
   const [finishQuiz, setFinishQuiz] = useState({ state: false, type: "" });
   const [startTime, setStartTime] = useState(null);
+  const [id, setId] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // useEffect(() => {
+  //   firstCommit();
+  // }, []);
   useEffect(() => {
-    updateQuizAnswers();
-  }, [questionsAnswers]);
-  useEffect(() => {
+    firstCommit();
     setStartTime(new Date());
   }, []);
+  const firstCommit = async () => {
+    const id = await addQuizzesUsers(quizInfo.uid, instructorId, userInfo.uid);
+    setId(id);
+  };
   const updateQuizAnswers = async () => {
-    const data = await getQuizzesUsersByQuizId(uid);
     const endTime = new Date();
     const elapsedTimeInSeconds = Math.floor((endTime - startTime) / 1000);
     try {
-      const quizzesUsersRef = doc(db, "quizzesUsers", data[0].id);
+      const quizzesUsersRef = doc(db, "quizzesUsers", id);
       await runTransaction(db, async (transaction) => {
         const sfDoc = await transaction.get(quizzesUsersRef);
 
@@ -48,27 +58,14 @@ const LiveQuiz = () => {
           throw "Document does not exist!";
         }
 
-        const currentArray = sfDoc.data().usersAnswer || [];
-        const studentIndex = currentArray.findIndex(
-          (item) => item.studentId === userInfo.uid
-        );
+        const currentArray = [];
 
-        if (studentIndex !== -1) {
-          const updatedStudentAnswers = {
-            ...currentArray[studentIndex],
-            elapsedTime: elapsedTimeInSeconds,
-            answers: [...questionsAnswers],
-          };
-          currentArray[studentIndex] = updatedStudentAnswers;
-        } else {
-          currentArray.push({
-            studentId: userInfo.uid,
-            elapsedTime: elapsedTimeInSeconds,
-            answers: [...questionsAnswers],
-          });
-        }
+        currentArray.push({
+          elapsedTime: elapsedTimeInSeconds,
+          answers: [...questionsAnswers],
+        });
 
-        transaction.update(quizzesUsersRef, { usersAnswer: currentArray });
+        transaction.update(quizzesUsersRef, { userAnswer: currentArray });
       });
 
       dispatch(
@@ -92,6 +89,63 @@ const LiveQuiz = () => {
       console.log("Transaction failed: ", e);
     }
   };
+  // const updateQuizAnswers = async () => {
+  //   const data = await getQuizzesUsersByQuizId(uid);
+  //   const endTime = new Date();
+  //   const elapsedTimeInSeconds = Math.floor((endTime - startTime) / 1000);
+  //   try {
+  //     const quizzesUsersRef = doc(db, "quizzesUsers", data[0].id);
+  //     await runTransaction(db, async (transaction) => {
+  //       const sfDoc = await transaction.get(quizzesUsersRef);
+
+  //       if (!sfDoc.exists()) {
+  //         throw "Document does not exist!";
+  //       }
+
+  //       const currentArray = sfDoc.data().usersAnswer || [];
+  //       const studentIndex = currentArray.findIndex(
+  //         (item) => item.studentId === userInfo.uid
+  //       );
+
+  //       if (studentIndex !== -1) {
+  //         const updatedStudentAnswers = {
+  //           ...currentArray[studentIndex],
+  //           elapsedTime: elapsedTimeInSeconds,
+  //           answers: [...questionsAnswers],
+  //         };
+  //         currentArray[studentIndex] = updatedStudentAnswers;
+  //       } else {
+  //         currentArray.push({
+  //           studentId: userInfo.uid,
+  //           elapsedTime: elapsedTimeInSeconds,
+  //           answers: [...questionsAnswers],
+  //         });
+  //       }
+
+  //       transaction.update(quizzesUsersRef, { usersAnswer: currentArray });
+  //     });
+
+  //     dispatch(
+  //       quizResultActions.setResult({
+  //         questionsAnswer: [...questionsAnswers],
+
+  //         quizTimer: quizInfo.quizDuration,
+  //         elapsedTime: elapsedTimeInSeconds,
+  //       })
+  //     );
+  //     localStorage.setItem(
+  //       "quizResultLocal",
+  //       JSON.stringify({
+  //         questionsAnswer: [...questionsAnswers],
+
+  //         quizTimer: quizInfo.quizDuration,
+  //         elapsedTime: elapsedTimeInSeconds,
+  //       })
+  //     );
+  //   } catch (e) {
+  //     console.log("Transaction failed: ", e);
+  //   }
+  // };
   useEffect(() => {
     const { uid, questions, quizDuration, instructorId } = quizInfo;
 
