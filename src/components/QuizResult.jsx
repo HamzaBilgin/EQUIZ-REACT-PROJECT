@@ -38,9 +38,8 @@ const QuizResult = () => {
 
       // İstatistik verilerini güncelle
       setTotalQuestions(questionsAnswer.length);
-      setCorrectPercentage(
-        ((correctQ.length / totalQuestions) * 100).toFixed(2)
-      );
+      setCorrectPercentage((correctQ.length / totalQuestions) * 100);
+
       setWrongPercentage((wrongCount / totalQuestions) * 100);
       setElapsedTimePercentage(
         ((elapsedTime / quizTimer / 60) * 100).toFixed(2)
@@ -67,7 +66,8 @@ const QuizResult = () => {
     checkAnswers();
   }, [questionsAnswer, totalQuestions]);
   const onSelect = (selectedKeys, info) => {};
-  const answeredQuestions = correctPercentage + wrongPercentage;
+  const answeredQuestions = (correctPercentage + wrongPercentage).toFixed(2);
+
   const configTreeData = (array, title, key) => {
     let initial = {
       title: title,

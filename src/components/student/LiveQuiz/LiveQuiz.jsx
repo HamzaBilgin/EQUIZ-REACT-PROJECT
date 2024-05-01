@@ -58,14 +58,19 @@ const LiveQuiz = () => {
           throw "Document does not exist!";
         }
 
-        const currentArray = [];
+        // const currentArray = [];
 
-        currentArray.push({
-          elapsedTime: elapsedTimeInSeconds,
-          answers: [...questionsAnswers],
+        // currentArray.push({
+        //   elapsedTime: elapsedTimeInSeconds,
+        //   answers: [...questionsAnswers],
+        // });
+
+        transaction.update(quizzesUsersRef, {
+          userAnswer: {
+            elapsedTime: elapsedTimeInSeconds,
+            answers: [...questionsAnswers],
+          },
         });
-
-        transaction.update(quizzesUsersRef, { userAnswer: currentArray });
       });
 
       dispatch(
