@@ -6,6 +6,8 @@ import InstructorPage from "./InstructorPage";
 import DefaultHomePage from "./DefaultHomePage";
 import StudentPage from "./StudentPage";
 
+import AdminPage from "./AdminPage";
+
 const HomePage = ({ layout }) => {
   const [userComponent, setUserComponent] = useState(null);
 
@@ -19,6 +21,9 @@ const HomePage = ({ layout }) => {
         break;
       case "student":
         setUserComponent(<StudentPage />);
+        break;
+      case "admin":
+        setUserComponent(<AdminPage />);
         break;
       default:
         setUserComponent(<ErrorPage />);

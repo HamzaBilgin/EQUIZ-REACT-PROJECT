@@ -44,7 +44,9 @@ const QuizResult = () => {
       setElapsedTimePercentage(
         ((elapsedTime / quizTimer / 60) * 100).toFixed(2)
       );
-
+      // console.log(emptyQ);
+      // console.log(correctQ);
+      // console.log(wrongQ);
       setEmptyQuestions(emptyQ);
       setCorrectQuestions(correctQ);
       setWrongQuestions(wrongQ);
@@ -110,7 +112,7 @@ const QuizResult = () => {
   };
   return (
     <div className="mt-[70px] w-[90%] h-full mx-auto flex flex-col justify-center items-center">
-      <div>
+      <div className="w-full">
         <div className=" flex  h-[160px]">
           <div className="w-1/3 flex flex-col items-center justify-around">
             <div>Correct Answer/Total question</div>

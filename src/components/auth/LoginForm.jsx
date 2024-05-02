@@ -59,6 +59,8 @@ const LoginForm = () => {
         navigate(`/student/${userFromDb.uid}`);
       } else if (userFromDb.role === "instructor") {
         navigate(`/instructor/${userFromDb.uid}`);
+      } else if (userFromDb.role === "admin") {
+        navigate(`/admin/${userFromDb.uid}`);
       } else {
         throw new Error("Hata fırlatıldı!");
       }
