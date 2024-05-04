@@ -34,6 +34,7 @@ const getQuizInfo = async (quizId) => {
     throw error;
   }
 };
+
 const updateQuizInfo = async (quizId, quizInfo) => {
   try {
     const quizRef = doc(db, "quizzes", quizId);
@@ -111,6 +112,17 @@ const getAllQuizzesByStudentId = async (studentId) => {
   });
   return loadedQuery;
 };
+const getAllQuizzes = async () => {
+  const querySnapshot = await getDocs(collection(db, "quizzes"));
+  // querySnapshot.forEach((doc) => {
+  //   console.log(` ${doc.data().aaad}`);
+  // });
+  let loadedQuery = [];
+  querySnapshot.forEach((doc) => {
+    loadedQuery.push({ id: doc.id, ...doc.data() });
+  });
+  return loadedQuery;
+};
 export {
   addQuiz,
   addQuizzesUsers,
@@ -122,4 +134,5 @@ export {
   getQuizzesUsersByQuizId,
   getQuizzesUsersByQuizAndStudentId,
   getAllQuizzesByStudentId,
+  getAllQuizzes,
 };

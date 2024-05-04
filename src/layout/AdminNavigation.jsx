@@ -1,9 +1,9 @@
-import Header from "./Header";
+import AdminHeader from "./AdminHeader";
 
 const AdminNavigation = () => {
   return (
     <div>
-      <Header />
+      <AdminHeader />
     </div>
   );
 };

@@ -4,11 +4,9 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import db from "../../FireBasee/Myfirebase";
-import { useNavigate } from "react-router-dom";
-
-const InstructorList = () => {
+const StudentList = () => {
   const [searchText, setSearchText] = useState("");
-  const navigate = useNavigate();
+
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -24,7 +22,7 @@ const InstructorList = () => {
     const fetchData = async () => {
       try {
         const usersRef = collection(db, "users");
-        const usersQuery = query(usersRef, where("role", "==", "instructor"));
+        const usersQuery = query(usersRef, where("role", "==", "student"));
 
         const usersSnapshot = await getDocs(usersQuery);
         const usersArray = usersSnapshot.docs.map((doc) => doc.data());
@@ -146,28 +144,6 @@ const InstructorList = () => {
         text
       ),
   });
-  const seeDetails = (item) => {
-    console.log(item);
-
-    // const { answers, elapsedTime, quizDuration } = item.details;
-    // dispatch(
-    //   quizResultActions.setResult({
-    //     questionsAnswer: [...answers],
-    //     quizTimer: quizDuration,
-    //     elapsedTime: elapsedTime,
-    //   })
-    // );
-    // localStorage.setItem(
-    //   "quizResultLocal",
-    //   JSON.stringify({
-    //     questionsAnswer: [...answers],
-    //     quizTimer: quizDuration,
-    //     elapsedTime: elapsedTime,
-    //   })
-    // );
-    // console.log(item);
-    navigate(`/admin/instructors/${item.uid}/info`);
-  };
   const columns = [
     {
       title: "Name",
@@ -208,7 +184,9 @@ const InstructorList = () => {
       ),
     },
   ];
-
+  const seeDetails = (item) => {
+    console.log(item);
+  };
   return (
     <Table
       className="mt-[70px] max-w-screen-xl w-full m-auto  "
@@ -221,4 +199,4 @@ const InstructorList = () => {
   );
 };
 
-export default InstructorList;
+export default StudentList;
