@@ -28,7 +28,7 @@ const AdminRoutes = [
         element: <InstructorList />,
       },
       {
-        path: "instructors/:intructorId/info",
+        path: "instructors/:instructorId/info",
         element: <InstructorInfo />,
       },
       {

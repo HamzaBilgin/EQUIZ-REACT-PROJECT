@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const InstructorInfo = () => {
-  const params = useParams;
-  console.log(params.intructorId);
+  const params = useParams();
+  console.log(params.instructorId);
   useEffect(() => {
     // console.log(params.intructorId);
   }, []);
