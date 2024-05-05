@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
-import axios from "axios";
-import { Button, Form, Input, Radio, Modal, Space } from "antd";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import db, { auth } from "../../FireBasee/Myfirebase";
+
+import { Button, Form, Input, Radio, Modal } from "antd";
+
 import { Link, useNavigate } from "react-router-dom";
-import { createUserIntoDb } from "../../actions/authActions/authActions";
+import { createUserIntoDb } from "../../actions/authActions";
+// import { createUserIntoDb } from "../../actions/authActions/authActions";
 
 const layout = {
   labelCol: {

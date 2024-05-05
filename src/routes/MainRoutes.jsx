@@ -1,8 +1,9 @@
 import MainLayout from "../layout/MainLayout";
+import DefaultHomePage from "../pages/DefaultHomePage";
 import ErrorPage from "../pages/ErrorPage";
-import HomePage from "../pages/HomePage";
-import RegisterPage from "../pages/authPages/RegisterPage";
+
 import LoginPage from "../pages/authPages/LoginPage";
+import RegisterPage from "../pages/authPages/RegisterPage";
 const MainRoutes = [
   {
     path: "/",
@@ -11,7 +12,7 @@ const MainRoutes = [
     children: [
       {
         index: true,
-        element: <HomePage layout={"default"} />,
+        element: <DefaultHomePage />,
       },
       { path: "auth/register", element: <RegisterPage /> },
       { path: "auth/login", element: <LoginPage /> },

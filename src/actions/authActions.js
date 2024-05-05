@@ -1,6 +1,6 @@
 import { doc, setDoc } from "firebase/firestore";
-import db, { auth } from "../../FireBasee/Myfirebase";
-import { getUserFromDb } from "../crudActions/crudActions";
+import { getUserFromDb } from "./crudActions";
+import db, { auth } from "../firebaseConfig";
 
 async function loginUser(email, password) {
   const userCredentials = await auth.signInWithEmailAndPassword(
@@ -12,7 +12,7 @@ async function loginUser(email, password) {
   const dbdata = await getUserFromDb(user.uid);
   return dbdata;
 }
-// register actions
+
 async function createUserIntoDb(user, password, handleRegistrationError) {
   auth
     .createUserWithEmailAndPassword(user.email, password)
@@ -24,14 +24,6 @@ async function createUserIntoDb(user, password, handleRegistrationError) {
     .catch((error) => {
       handleRegistrationError(error);
     });
-}
-async function addUserToFirestore(uid, user, password) {
-  const docData = {
-    uid: uid,
-    password: password,
-    ...user,
-  };
-  await setDoc(doc(db, "users", uid), docData);
 }
 
 //change password
@@ -47,4 +39,14 @@ async function changePassword(password, newPassword) {
     });
   return user;
 }
+
+async function addUserToFirestore(uid, user, password) {
+  const docData = {
+    uid: uid,
+    password: password,
+    ...user,
+  };
+  await setDoc(doc(db, "users", uid), docData);
+}
+
 export { loginUser, createUserIntoDb, changePassword };
