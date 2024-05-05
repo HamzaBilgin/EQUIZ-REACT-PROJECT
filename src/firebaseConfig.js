@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDctEJlsnz8iMMgiDcIOK6dcPdcAfRSBDM",
@@ -16,6 +17,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const auth = firebase.auth();
+// const auth = getAuth();
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);

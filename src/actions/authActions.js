@@ -9,6 +9,7 @@ async function loginUser(email, password) {
   );
 
   const user = userCredentials.user;
+  console.log(user);
   const dbdata = await getUserFromDb(user.uid);
   return dbdata;
 }
