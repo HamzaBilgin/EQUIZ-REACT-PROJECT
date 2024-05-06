@@ -1,32 +1,60 @@
 import { doc, setDoc } from "firebase/firestore";
 import { getUserFromDb } from "./crudActions";
 import db, { auth } from "../firebaseConfig";
+import store from "../store/store";
+import { authActions } from "../store/slice/authSlice";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 async function loginUser(email, password) {
-  const userCredentials = await auth.signInWithEmailAndPassword(
-    email,
-    password
-  );
-
-  const user = userCredentials.user;
-  console.log(user);
-  const dbdata = await getUserFromDb(user.uid);
-  return dbdata;
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    const dbdata = await getUserFromDb(user.uid);
+    store.dispatch(authActions.login(dbdata));
+    localStorage.setItem("user", JSON.stringify(dbdata));
+    return dbdata;
+  } catch (error) {
+    console.error("Login Error:", error);
+    throw error;
+  }
 }
+async function logoutUser(email, password) {
+  try {
+    await auth.signOut();
 
-async function createUserIntoDb(user, password, handleRegistrationError) {
-  auth
-    .createUserWithEmailAndPassword(user.email, password)
-    .then((userCredential) => {
-      const newUser = userCredential.user;
+    store.dispatch(authActions.logout());
 
-      addUserToFirestore(newUser.uid, user, password);
-    })
-    .catch((error) => {
-      handleRegistrationError(error);
-    });
+    localStorage.clear();
+
+    return true;
+  } catch (error) {
+    console.error("Login Error:", error);
+    throw error;
+  }
 }
-
+// localStorage.clear();
+async function createUserIntoDb(newUser, password, handleRegistrationError) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      newUser.email,
+      password
+    );
+    const registeredUser = userCredential.user;
+    addUserToFirestore(registeredUser.uid, newUser, password);
+    return registeredUser;
+  } catch (error) {
+    handleRegistrationError(error);
+    throw error;
+  }
+}
 //change password
 async function changePassword(password, newPassword) {
   const user = auth.currentUser;
@@ -50,4 +78,4 @@ async function addUserToFirestore(uid, user, password) {
   await setDoc(doc(db, "users", uid), docData);
 }
 
-export { loginUser, createUserIntoDb, changePassword };
+export { loginUser, logoutUser, createUserIntoDb, changePassword };

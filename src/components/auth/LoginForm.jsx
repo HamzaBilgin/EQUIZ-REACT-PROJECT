@@ -2,11 +2,10 @@ import { useRef } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { authActions } from "../../store/slice/authSlice";
+
 import { useDispatch } from "react-redux";
-import { userInfoActions } from "../../store/slice/userInfoSlice";
+
 import { loginUser } from "../../actions/authActions";
-import { Bounce, toast } from "react-toastify";
 
 const errorConfig = {
   title: "Error!",
@@ -45,24 +44,10 @@ const LoginForm = () => {
 
   const onFinish = async (values) => {
     const { email, password } = values.user;
+
     try {
       const userFromDb = await loginUser(email, password);
-      dispatch(authActions.login());
-      const isAuthenticated = JSON.stringify(true);
-      localStorage.setItem("isAuthenticated", isAuthenticated);
-      dispatch(userInfoActions.setUserInfo(userFromDb));
-      localStorage.setItem("userInfo", JSON.stringify(userFromDb));
-      toast.success(`Welcome ${userFromDb.name}`, {
-        position: "top-left",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+
       if (userFromDb.role === "student") {
         navigate(`/student/${userFromDb.uid}`);
       } else if (userFromDb.role === "instructor") {

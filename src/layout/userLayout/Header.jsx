@@ -3,13 +3,13 @@ import { Avatar, Dropdown } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { userInfoActions } from "../../store/slice/userInfoSlice";
-import { authActions } from "../../store/slice/authSlice";
+
+import { logoutUser } from "../../actions/authActions";
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [homeUrl, setHomeUrl] = useState("");
-  const userInfo = useSelector((state) => state.userInfoReducer.userInfo);
+  const userInfo = useSelector((state) => state.authReducer.user);
   useEffect(() => {
     if (userInfo.role === "admin") {
       setHomeUrl(`/admin/${userInfo.uid}`);
@@ -21,11 +21,8 @@ const Header = () => {
       setHomeUrl(`/`);
     }
   }, []);
-  const logout = () => {
-    dispatch(authActions.logout());
-    dispatch(userInfoActions.setUserInfo([]));
-
-    localStorage.clear();
+  const logout = async () => {
+    await logoutUser();
     navigate(`/`);
   };
   const items = [

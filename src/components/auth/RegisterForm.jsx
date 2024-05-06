@@ -4,7 +4,6 @@ import { Button, Form, Input, Radio, Modal } from "antd";
 
 import { Link, useNavigate } from "react-router-dom";
 import { createUserIntoDb } from "../../actions/authActions";
-// import { createUserIntoDb } from "../../actions/authActions/authActions";
 
 const layout = {
   labelCol: {
