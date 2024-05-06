@@ -5,13 +5,13 @@ import "firebase/compat/auth";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBocS5pndSgrYOfyPAZjNA3Bnm6Q3F4Fr8",
-  authDomain: "equiz-b5f1a.firebaseapp.com",
-  projectId: "equiz-b5f1a",
-  storageBucket: "equiz-b5f1a.appspot.com",
-  messagingSenderId: "35330954445",
-  appId: "1:35330954445:web:c229a05c55f355b9e1c584",
-  measurementId: "G-BV3T1XFT8X",
+  apiKey: "AIzaSyDctEJlsnz8iMMgiDcIOK6dcPdcAfRSBDM",
+  authDomain: "equiz-react-baa3e.firebaseapp.com",
+  projectId: "equiz-react-baa3e",
+  storageBucket: "equiz-react-baa3e.appspot.com",
+  messagingSenderId: "973731555592",
+  appId: "1:973731555592:web:e9566e27ad9592ef76a4bd",
+  measurementId: "G-JPQSS58JZ9",
 };
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
