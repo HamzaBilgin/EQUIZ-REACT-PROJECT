@@ -51,13 +51,14 @@ const RegisterForm = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("Content of the modal");
   const onFinish = async ({ password, user }) => {
-    formRef.current.resetFields();
-    createUserIntoDb(user, password, handleRegistrationError);
-    setTimeout(() => {
-      setConfirmLoading(false);
-      navigate(`/auth/login`);
-      setOpen(false);
-    }, 2000);
+    createUserIntoDb(user, password, handleRegistrationError).then((item) => {
+      formRef.current.resetFields();
+      setTimeout(() => {
+        setConfirmLoading(false);
+        navigate(`/auth/login`);
+        setOpen(false);
+      }, 2000);
+    });
   };
 
   //Hatalı durularda modal text i revize eder

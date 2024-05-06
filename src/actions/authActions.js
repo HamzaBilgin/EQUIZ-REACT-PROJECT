@@ -25,7 +25,7 @@ async function loginUser(email, password) {
     throw error;
   }
 }
-async function logoutUser(email, password) {
+async function logoutUser() {
   try {
     await auth.signOut();
 

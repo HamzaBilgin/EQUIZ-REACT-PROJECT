@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,15 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { loginUser } from "../../actions/authActions";
-
-const errorConfig = {
-  title: "Error!",
-  content: (
-    <>
-      <p>Message: Unsuccess</p>
-    </>
-  ),
-};
 
 const validateMessages = {
   required: "${label} is required!",
@@ -41,6 +32,7 @@ const LoginForm = () => {
   const formRef = useRef();
   const dispatch = useDispatch();
   const [modal, contextHolder] = Modal.useModal();
+  const [errorMessage, setErrorMessage] = useState("Error");
 
   const onFinish = async (values) => {
     const { email, password } = values.user;
@@ -59,19 +51,44 @@ const LoginForm = () => {
       }
       formRef.current.resetFields();
     } catch (error) {
-      modal.error({
-        ...errorConfig,
-        okButtonProps: {
-          className: "ant-btn-error",
-          style: {
-            color: "rgba(255, 255, 255, 1)",
-            backgroundColor: "rgba(255, 0, 0, 0.88)",
-          },
-        },
-      });
+      switch (error.code) {
+        case "auth/invalid-credential":
+          errorModalModify("Şifre eşleşmedi");
+
+          break;
+        case "auth/user-disabled":
+          errorModalModify("Kullanıcı devre dışı bırakıldı");
+
+          break;
+        case "auth/user-not-found":
+          errorModalModify("Kullanıcı bulunamadı.");
+
+          break;
+        default:
+          errorModalModify("Unexpected Error");
+
+          break;
+      }
     }
   };
+  const errorModalModify = (message) => {
+    modal.error({
+      title: "Error!",
+      content: (
+        <>
+          <p>{message}</p>
+        </>
+      ),
 
+      okButtonProps: {
+        className: "ant-btn-error",
+        style: {
+          color: "rgba(255, 255, 255, 1)",
+          backgroundColor: "rgba(255, 0, 0, 0.88)",
+        },
+      },
+    });
+  };
   return (
     <div className="w-[300px] m-auto mt-6 h-dvh">
       <Form
