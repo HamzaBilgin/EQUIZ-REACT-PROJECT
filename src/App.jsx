@@ -4,6 +4,7 @@ import InstructorRoutes from "./routes/InstructorRoutes";
 import StudentRoutes from "./routes/StudentRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuthChecker } from "./hooks/AuthChecker";
 const router = createBrowserRouter([
   ...MainRoutes,
   ...InstructorRoutes,

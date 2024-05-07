@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useAuthChecker } from "../hooks/AuthChecker";
 
 const DefaultHomePage = () => {
+  useAuthChecker();
   return (
     <div className="h-[200px] w-[500px] flex flex-col justify-around items-center  ">
       <h1>WELCOME TO EQUIZ</h1>

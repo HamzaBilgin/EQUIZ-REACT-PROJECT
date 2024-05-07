@@ -4,6 +4,7 @@ import { Button, Form, Input, Radio, Modal } from "antd";
 
 import { Link, useNavigate } from "react-router-dom";
 import { createUserIntoDb } from "../../actions/authActions";
+import { useAuthChecker } from "../../hooks/AuthChecker";
 
 const layout = {
   labelCol: {
@@ -50,6 +51,7 @@ const RegisterForm = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("Content of the modal");
+  useAuthChecker();
   const onFinish = async ({ password, user }) => {
     createUserIntoDb(user, password, handleRegistrationError).then((item) => {
       formRef.current.resetFields();

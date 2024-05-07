@@ -2,8 +2,9 @@ import { Button, Form, Input, Modal } from "antd";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../actions/authActions";
+import { changePassword, loginUser } from "../actions/authActions";
 import { updateUser } from "../actions/crudActions";
+import { auth } from "../firebaseConfig";
 
 const layout = {
   labelCol: {
@@ -34,20 +35,14 @@ const errorConfig = {
 
 const ChangePassword = () => {
   const formRef = useRef();
-  const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("Content of the modal");
-  const userInfo = useSelector((state) => state.userInfoReducer.userInfo);
   const onFinish = async (values) => {
     const { password, newPassword, confirm } = values;
     try {
-      const user = auth.currentUser;
-
-      const userFromDb = await loginUser(userInfo.email, password);
-      ChangePassword(password, newPassword);
-      updateUser(userInfo.uid, newPassword);
+      changePassword(password, newPassword);
     } catch (error) {
       modal.error({
         ...errorConfig,

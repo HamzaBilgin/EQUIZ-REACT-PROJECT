@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { loginUser } from "../../actions/authActions";
+import { useAuthChecker } from "../../hooks/AuthChecker";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -28,6 +29,7 @@ const validateEmail = (_, value) => {
 };
 
 const LoginForm = () => {
+  useAuthChecker();
   const navigate = useNavigate();
   const formRef = useRef();
   const dispatch = useDispatch();
