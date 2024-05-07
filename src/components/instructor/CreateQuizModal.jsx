@@ -26,7 +26,7 @@ const formItemLayout = {
 };
 const CreateQuizModal = ({ handleCancel }) => {
   const navigate = useNavigate();
-  const userInfo = useSelector((state) => state.authReducer.user);
+
   //category area start
   const categories = [
     { label: "Türkçe", value: "turkce" },
@@ -41,8 +41,8 @@ const CreateQuizModal = ({ handleCancel }) => {
   //handleSubmit area start
   const handleSubmit = async ({ makeQuiz }) => {
     const randomData = generateRandomData();
-    createQuiz(makeQuiz, randomData);
-    // navigate(`/instructor/${quizId}/makeQuizConfig`);
+    const id = await createQuiz(makeQuiz, randomData);
+    navigate(`/instructor/${id}/makeQuizConfig`);
   };
 
   function generateRandomData() {

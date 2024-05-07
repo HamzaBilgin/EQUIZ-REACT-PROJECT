@@ -3,7 +3,8 @@ import { getFirestore } from "firebase/firestore";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
+import store from "./store/store";
+import { authActions } from "./store/slice/authSlice";
 const firebaseConfig = {
   apiKey: "AIzaSyDctEJlsnz8iMMgiDcIOK6dcPdcAfRSBDM",
   authDomain: "equiz-react-baa3e.firebaseapp.com",
@@ -22,12 +23,13 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-// onAuthStateChanged(auth, (user) => {
-//   if (user) {
-//     console.log(user);
-//   } else {
-//     console.log("olmadı");
-//   }
-// });
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    store.dispatch(authActions.login(user.uid));
+    localStorage.setItem("user", JSON.stringify(user.uid));
+  } else {
+    console.log("olmadı");
+  }
+});
 export { app, auth };
 export default db;

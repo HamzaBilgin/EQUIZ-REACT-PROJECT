@@ -22,7 +22,9 @@ const createQuiz = async (makeQuiz, liveQuizId) => {
     liveQuizId: liveQuizId,
     createdAt: now,
     questions: [],
-    statu: false,
+    quizDuration: null,
+    startAt: null,
+    statu: "Incomplete",
     instructorId: doc(db, "users", auth.currentUser.uid),
   };
   const docref = await addDoc(collection(db, "quizzes"), data);
@@ -37,16 +39,14 @@ const createQuiz = async (makeQuiz, liveQuizId) => {
 //   const docref = await addDoc(collection(db, "quizzesUsers"), data);
 //   return docref.id;
 // };
-// const getQuizInfo = async (quizId) => {
-//   try {
-//     const docRef = doc(db, "quizzes", quizId);
-//     const docSnap = await getDoc(docRef);
-//     return docSnap.data();
-//   } catch (error) {
-//     console.error("Güncelleme işlemi sırasında bir hata oluştu:", error);
-//     throw error;
-//   }
-// };
+const getQuizInfo = async (quizId) => {
+  const docRef = doc(db, "quizzes", quizId);
+  return getDoc(docRef)
+    .then((docSnap) => docSnap.data())
+    .catch((error) => {
+      throw error;
+    });
+};
 
 // const updateQuizInfo = async (quizId, quizInfo) => {
 //   try {
@@ -139,7 +139,7 @@ const createQuiz = async (makeQuiz, liveQuizId) => {
 export {
   createQuiz,
   // addQuizzesUsers,
-  // getQuizInfo,
+  getQuizInfo,
   // updateQuizInfo,
   // getAllQuizByInstructorId,
   // deleteQuizById,
