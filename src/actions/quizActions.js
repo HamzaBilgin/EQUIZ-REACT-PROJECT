@@ -48,16 +48,16 @@ const getQuizInfo = async (quizId) => {
     });
 };
 
-// const updateQuizInfo = async (quizId, quizInfo) => {
-//   try {
-//     const quizRef = doc(db, "quizzes", quizId);
-//     await updateDoc(quizRef, quizInfo);
-//     return true;
-//   } catch (error) {
-//     console.error("Güncelleme işlemi sırasında bir hata oluştu:", error);
-//     throw error;
-//   }
-// };
+const updateQuizInfo = async (quizId, quizInfo) => {
+  try {
+    const quizRef = doc(db, "quizzes", quizId);
+    await updateDoc(quizRef, quizInfo);
+    return true;
+  } catch (error) {
+    console.error("Güncelleme işlemi sırasında bir hata oluştu:", error);
+    throw error;
+  }
+};
 // const getAllQuizByInstructorId = async (instructorId) => {
 //   const q = query(
 //     collection(db, "quizzes"),
@@ -140,7 +140,7 @@ export {
   createQuiz,
   // addQuizzesUsers,
   getQuizInfo,
-  // updateQuizInfo,
+  updateQuizInfo,
   // getAllQuizByInstructorId,
   // deleteQuizById,
   // deleteQuizzesUsers,

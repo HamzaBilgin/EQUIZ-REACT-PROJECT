@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router-dom";
 import { auth } from "../../firebaseConfig";
-import { getQuizInfo } from "../../actions/quizActions";
+import { getQuizInfo, updateQuizInfo } from "../../actions/quizActions";
 import { useSelector } from "react-redux";
 import ErrorPage from "../../pages/ErrorPage";
 import ShowAllQuestions from "./ShowAllQuestions";
+import QuizConfigItem from "./QuizConfigItem";
 let initalQuestion = {
   question: "",
   options: [
@@ -17,13 +18,14 @@ let initalQuestion = {
 };
 const QuizConfig = () => {
   const quiz = useLoaderData();
-
+  const params = useParams();
   const userInfo = useSelector((state) => state.authReducer.user);
   // console.log(product);
   const [quizInfo, setQuizInfo] = useState(quiz);
   const [arrayIndex, setArrayIndex] = useState(-1);
   const [err, setErr] = useState();
   const [showAllQuestion, setShowAllQuestion] = useState(true);
+  const [questionInfo, setQuestionInfo] = useState({});
   useEffect(() => {
     if (!quiz) {
       const error = new Error("Quiz bulunamadı");
@@ -39,6 +41,13 @@ const QuizConfig = () => {
       setErr(error);
     }
   }, [userInfo]);
+  useEffect(() => {
+    const fetchData = async () => {
+      await updateQuizInfo(params.quizId, quizInfo);
+    };
+    fetchData();
+  }, [quizInfo]);
+
   if (err)
     return (
       <div>
@@ -46,7 +55,7 @@ const QuizConfig = () => {
       </div>
     );
   const handleLiCLick = (index) => {
-    console.log(index);
+    setQuestionInfo(quizInfo.questions[index]);
     setShowAllQuestion(false);
     setArrayIndex(index);
   };
@@ -59,6 +68,23 @@ const QuizConfig = () => {
   const seeAllQuestionsFunk = () => {
     setShowAllQuestion(true);
     setArrayIndex(-1);
+  };
+  const updateQuestionArray = (data) => {
+    setQuizInfo({
+      ...quizInfo,
+      questions: quizInfo.questions.map((question, i) =>
+        i === arrayIndex ? data : question
+      ),
+    });
+  };
+  const deleteQuestion = (deleteIndex) => {
+    const updatedQuestions = quizInfo.questions.filter(
+      (_, index) => index !== deleteIndex
+    );
+    setQuizInfo({
+      ...quizInfo,
+      questions: updatedQuestions,
+    });
   };
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
@@ -89,7 +115,7 @@ const QuizConfig = () => {
                 }`}
                 onClick={() => handleLiCLick(index)}
               >
-                xzcszs
+                {index + 1}.soru
               </li>
             ))}
           </ul>
@@ -105,7 +131,12 @@ const QuizConfig = () => {
           {showAllQuestion ? (
             <ShowAllQuestions questions={quizInfo.questions} />
           ) : (
-            <div>{arrayIndex + 1}</div>
+            <QuizConfigItem
+              questionInfo={questionInfo}
+              arrayIndex={arrayIndex}
+              updateQuestionArray={updateQuestionArray}
+              deleteQuestion={deleteQuestion}
+            />
           )}
         </div>
         <div className="w-2/6 p-2 bg-red-200">adwawdawd</div>

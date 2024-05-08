@@ -2,7 +2,6 @@ import React from "react";
 import { Collapse, Space } from "antd";
 
 const ShowAllQuestions = ({ questions }) => {
-  console.log(questions);
   return (
     <>
       {questions.length === 0 ? (
