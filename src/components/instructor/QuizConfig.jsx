@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import ErrorPage from "../../pages/ErrorPage";
 import ShowAllQuestions from "./ShowAllQuestions";
 import QuizConfigItem from "./QuizConfigItem";
+import QuizConfigDetail from "./QuizConfigDetail";
 let initalQuestion = {
   question: "",
   options: [
@@ -139,7 +140,9 @@ const QuizConfig = () => {
             />
           )}
         </div>
-        <div className="w-2/6 p-2 bg-red-200">adwawdawd</div>
+        <div className="w-2/6 p-2 ">
+          <QuizConfigDetail setQuizInfo={setQuizInfo} quizInfo={quizInfo} />
+        </div>
       </div>
     </div>
   );

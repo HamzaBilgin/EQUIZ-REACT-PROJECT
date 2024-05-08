@@ -79,7 +79,17 @@ const CreateQuizModal = ({ handleCancel }) => {
       >
         <Input />
       </Form.Item>
-
+      <Form.Item
+        name={["makeQuiz", "quizDuration"]}
+        label="Quiz Duration(dk)"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input type="number" />
+      </Form.Item>
       <Form.Item
         label="Category"
         name={["makeQuiz", "category"]}
