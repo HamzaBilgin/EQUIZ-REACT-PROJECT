@@ -25,7 +25,7 @@ const categories = [
   { label: "Biyoloji", value: "biyoloji" },
 ];
 const QuizConfigDetail = ({ quizInfo, setQuizInfo }) => {
-  const [switchControl, setSwitchControl] = useState(false);
+  // const [switchControl, setSwitchControl] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const QuizConfigDetail = ({ quizInfo, setQuizInfo }) => {
     form.setFieldsValue({
       info: {
         category: quizInfo.category,
-        statu: quizInfo.statu,
+        // statu: quizInfo.statu,
         quizDuration: quizInfo.quizDuration,
       },
       startAt: startAtValue,
@@ -94,7 +94,7 @@ const QuizConfigDetail = ({ quizInfo, setQuizInfo }) => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item
+      {/* <Form.Item
         name={["info", "statu"]}
         label={`${switchControl ? "Active" : "Pasif"} `}
         valuePropName="checked"
@@ -104,7 +104,7 @@ const QuizConfigDetail = ({ quizInfo, setQuizInfo }) => {
           unCheckedChildren={<CloseOutlined />}
           onChange={() => setSwitchControl(!switchControl)}
         />
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item
         name={["info", "quizDuration"]}

@@ -22,7 +22,6 @@ const createQuiz = async (makeQuiz, liveQuizId) => {
     liveQuizId: liveQuizId,
     createdAt: now,
     questions: [],
-    startAt: null,
     statu: "Incomplete",
     instructorId: doc(db, "users", auth.currentUser.uid),
   };

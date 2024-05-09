@@ -1,4 +1,4 @@
-import { Form, Input, Space, Button, Select } from "antd";
+import { Form, Input, Space, Button, Select, DatePicker } from "antd";
 import { Option } from "antd/es/mentions";
 import { useNavigate } from "react-router-dom";
 import { doc } from "firebase/firestore";
@@ -24,6 +24,7 @@ const formItemLayout = {
     },
   },
 };
+
 const CreateQuizModal = ({ handleCancel }) => {
   const navigate = useNavigate();
 
@@ -40,8 +41,12 @@ const CreateQuizModal = ({ handleCancel }) => {
 
   //handleSubmit area start
   const handleSubmit = async ({ makeQuiz }) => {
+    console.log(makeQuiz);
     const randomData = generateRandomData();
-    const id = await createQuiz(makeQuiz, randomData);
+    const id = await createQuiz(
+      { ...makeQuiz, startAt: makeQuiz.startAt.format("YYYY-MM-DD HH:mm:ss") },
+      randomData
+    );
     navigate(`/instructor/${id}/makeQuizConfig`);
   };
 
@@ -58,7 +63,15 @@ const CreateQuizModal = ({ handleCancel }) => {
 
     return result;
   }
-
+  const config = {
+    rules: [
+      {
+        type: "object",
+        required: true,
+        message: "Please select time!",
+      },
+    ],
+  };
   return (
     <Form
       {...formItemLayout}
@@ -89,6 +102,9 @@ const CreateQuizModal = ({ handleCancel }) => {
         ]}
       >
         <Input type="number" />
+      </Form.Item>
+      <Form.Item name={["makeQuiz", "startAt"]} label="Start Date" {...config}>
+        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
       </Form.Item>
       <Form.Item
         label="Category"
