@@ -7,6 +7,7 @@ import ErrorPage from "../../pages/ErrorPage";
 import ShowAllQuestions from "./ShowAllQuestions";
 import QuizConfigItem from "./QuizConfigItem";
 import QuizConfigDetail from "./QuizConfigDetail";
+import { message } from "antd";
 let initalQuestion = {
   question: "",
   options: [
@@ -27,6 +28,14 @@ const QuizConfig = () => {
   const [err, setErr] = useState();
   const [showAllQuestion, setShowAllQuestion] = useState(true);
   const [questionInfo, setQuestionInfo] = useState({});
+  const [messageApi, contextHolder] = message.useMessage();
+  const infoMessageConfig = (type, content) => {
+    messageApi.open({
+      type: type,
+      content: content,
+    });
+  };
+
   useEffect(() => {
     if (!quiz) {
       const error = new Error("Quiz bulunamadı");
@@ -77,6 +86,7 @@ const QuizConfig = () => {
         i === arrayIndex ? data : question
       ),
     });
+    infoMessageConfig("success", "Question updated");
   };
   const deleteQuestion = (deleteIndex) => {
     const updatedQuestions = quizInfo.questions.filter(
@@ -86,6 +96,8 @@ const QuizConfig = () => {
       ...quizInfo,
       questions: updatedQuestions,
     });
+    setArrayIndex(deleteIndex - 1);
+    infoMessageConfig("success", "Question deleted");
   };
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
@@ -141,9 +153,14 @@ const QuizConfig = () => {
           )}
         </div>
         <div className="w-2/6 p-2 ">
-          <QuizConfigDetail setQuizInfo={setQuizInfo} quizInfo={quizInfo} />
+          <QuizConfigDetail
+            setQuizInfo={setQuizInfo}
+            quizInfo={quizInfo}
+            infoMessageConfig={infoMessageConfig}
+          />
         </div>
       </div>
+      {contextHolder}
     </div>
   );
 };

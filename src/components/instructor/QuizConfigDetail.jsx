@@ -24,7 +24,7 @@ const categories = [
   { labe: "Fizik", value: "Fizik" },
   { label: "Biyoloji", value: "biyoloji" },
 ];
-const QuizConfigDetail = ({ quizInfo, setQuizInfo }) => {
+const QuizConfigDetail = ({ quizInfo, setQuizInfo, infoMessageConfig }) => {
   // const [switchControl, setSwitchControl] = useState(false);
   const [form] = Form.useForm();
 
@@ -64,6 +64,7 @@ const QuizConfigDetail = ({ quizInfo, setQuizInfo }) => {
       ...quizInfo,
       ...values3,
     });
+    infoMessageConfig("success", "Changes saved");
   };
 
   return (
@@ -115,7 +116,7 @@ const QuizConfigDetail = ({ quizInfo, setQuizInfo }) => {
           },
         ]}
       >
-        <Input type="number" />
+        <Input type="number" min={5} />
       </Form.Item>
       <Form.Item name="startAt" label="Start Date" {...config}>
         <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
