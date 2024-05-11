@@ -7,7 +7,7 @@ import ErrorPage from "../../pages/ErrorPage";
 import ShowAllQuestions from "./ShowAllQuestions";
 import QuizConfigItem from "./QuizConfigItem";
 import QuizConfigDetail from "./QuizConfigDetail";
-import { message } from "antd";
+import { Switch, Tooltip, message } from "antd";
 let initalQuestion = {
   question: "",
   options: [
@@ -29,6 +29,8 @@ const QuizConfig = () => {
   const [showAllQuestion, setShowAllQuestion] = useState(true);
   const [questionInfo, setQuestionInfo] = useState({});
   const [messageApi, contextHolder] = message.useMessage();
+  const [disabled, setDisabled] = useState(false);
+  const [checked, setChecked] = useState(true);
   const infoMessageConfig = (type, content) => {
     messageApi.open({
       type: type,
@@ -49,6 +51,24 @@ const QuizConfig = () => {
       error.code = 1;
 
       setErr(error);
+    }
+    switch (quiz.statu) {
+      case "Incomplete":
+        console.log("adwawd");
+        setDisabled(true);
+        setChecked(false);
+        break;
+      case "Pasif":
+        setDisabled(false);
+        setChecked(false);
+        break;
+      case "Active":
+        setDisabled(false);
+        setChecked(true);
+        break;
+      default:
+        setDisabled(true);
+        break;
     }
   }, [userInfo]);
   useEffect(() => {
@@ -99,10 +119,23 @@ const QuizConfig = () => {
     setArrayIndex(deleteIndex - 1);
     infoMessageConfig("success", "Question deleted");
   };
+  const onChange = () => {
+    setChecked(!checked);
+  };
   return (
     <div className="mt-[70px] max-w-screen-xl w-full m-auto">
       <div className="bg-slate-200 flex justify-between ">
-        <div className="h-16 w-1/3"></div>
+        <div className="h-16 w-1/3  flex items-center">
+          <Tooltip
+            className="ml-6 flex"
+            title="Bu bir örnek tooltip içeriğidir"
+          >
+            <Switch disabled={disabled} checked={checked} onChange={onChange} />
+            <div className="text-center ml-2">
+              <span>Statu : {quizInfo.statu}</span>
+            </div>
+          </Tooltip>
+        </div>
         <div className="h-16 w-1/3  flex justify-center items-center">
           {quiz.quizName}
         </div>
