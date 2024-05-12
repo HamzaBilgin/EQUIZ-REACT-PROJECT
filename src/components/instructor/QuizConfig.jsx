@@ -54,7 +54,6 @@ const QuizConfig = () => {
     }
     switch (quiz.statu) {
       case "Incomplete":
-        console.log("adwawd");
         setDisabled(true);
         setChecked(false);
         break;
@@ -77,6 +76,9 @@ const QuizConfig = () => {
     };
     fetchData();
   }, [quizInfo]);
+  useEffect(() => {
+    setQuestionInfo(quizInfo.questions[arrayIndex]);
+  }, [arrayIndex]);
 
   if (err)
     return (

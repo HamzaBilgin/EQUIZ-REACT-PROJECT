@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import { Form, Input, Radio, Space, Button, Select } from "antd";
 import { Option } from "antd/es/mentions";
 
@@ -51,6 +51,7 @@ const QuizConfigItem = ({
       options: questionOption,
       correctOption: correctOptionObject,
     };
+
     updateQuestionArray(questionData);
   };
   const handleInputChange = (id, newValue) => {
