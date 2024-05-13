@@ -52,6 +52,11 @@ const QuizConfig = () => {
 
       setErr(error);
     }
+
+    const isEmpty = quiz.questions.some((question) =>
+      question.options.some((option) => option.value === "")
+    );
+    console.log(isEmpty);
     switch (quiz.statu) {
       case "Incomplete":
         setDisabled(true);
@@ -102,13 +107,26 @@ const QuizConfig = () => {
     setArrayIndex(-1);
   };
   const updateQuestionArray = (data) => {
-    setQuizInfo({
-      ...quizInfo,
-      questions: quizInfo.questions.map((question, i) =>
-        i === arrayIndex ? data : question
-      ),
+    const isEmpty = checkQuestionArray(data);
+    console.log(isEmpty);
+    if (isEmpty) {
+      infoMessageConfig("error", "Nooo");
+    } else {
+      setQuizInfo({
+        ...quizInfo,
+        questions: quizInfo.questions.map((question, i) =>
+          i === arrayIndex ? data : question
+        ),
+      });
+      infoMessageConfig("success", "Question updated");
+    }
+  };
+  const checkQuestionArray = (data) => {
+    const isEmpty = data.options.find((item) => {
+      return item.value === "";
     });
-    infoMessageConfig("success", "Question updated");
+    return isEmpty;
+    // infoMessageConfig("success", "Question updated");
   };
   const deleteQuestion = (deleteIndex) => {
     const updatedQuestions = quizInfo.questions.filter(
@@ -159,8 +177,8 @@ const QuizConfig = () => {
               <li
                 key={index}
                 className={`cursor-pointer mb-2 w-full rounded-full hover:bg-lime-500 ${
-                  arrayIndex === index && "bg-lime-200"
-                }`}
+                  checkQuestionArray(item) ? "text-red-600" : "text-black"
+                } ${arrayIndex === index && "bg-lime-200"}`}
                 onClick={() => handleLiCLick(index)}
               >
                 {index + 1}.soru
@@ -184,6 +202,7 @@ const QuizConfig = () => {
               arrayIndex={arrayIndex}
               updateQuestionArray={updateQuestionArray}
               deleteQuestion={deleteQuestion}
+              checkQuestionArray={checkQuestionArray}
             />
           )}
         </div>

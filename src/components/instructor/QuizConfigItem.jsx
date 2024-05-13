@@ -25,6 +25,7 @@ const QuizConfigItem = ({
   arrayIndex,
   updateQuestionArray,
   deleteQuestion,
+  checkQuestionArray,
 }) => {
   const [form] = Form.useForm();
   const { question, options, correctOption } = questionInfo;
@@ -51,7 +52,6 @@ const QuizConfigItem = ({
       options: questionOption,
       correctOption: correctOptionObject,
     };
-
     updateQuestionArray(questionData);
   };
   const handleInputChange = (id, newValue) => {

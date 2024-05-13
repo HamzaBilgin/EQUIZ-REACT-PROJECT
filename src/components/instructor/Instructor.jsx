@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { Button, Card, Modal } from "antd";
 
 import CreateQuizModal from "./CreateQuizModal";
+import QuizList from "./QuizList";
 
 const quizOperations = [
   {
@@ -66,6 +67,7 @@ const Instructor = () => {
           <CreateQuizModal handleCancel={handleCancel} />
         </Modal>
       </div>
+      <QuizList />
     </div>
   );
 };
