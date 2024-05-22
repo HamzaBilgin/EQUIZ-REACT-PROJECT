@@ -69,6 +69,41 @@ const deleteQuizzesUsers = async (quizId) => {
     deleteDoc(doc.ref);
   });
 };
+// Student actions
+const getQuizByLiveQuizId = async (liveQuizId) => {
+  const liveQuizs = collection(db, "quizzes");
+  const stateQuery = query(
+    liveQuizs,
+    where("liveQuizId", "==", liveQuizId),
+    where("statu", "==", "Active")
+  );
+  const quizzesSnapshot = await getDocs(stateQuery);
+  let loadedQuery = [];
+  quizzesSnapshot.forEach((doc) => {
+    loadedQuery.push({ id: doc.id, ...doc.data() });
+  });
+  return loadedQuery;
+};
+const getQuizzesUsersByQuizAndStudentId = async (quizId, studentId) => {
+  const quizzesUsersRef = collection(db, "quizzesUsers");
+  const stateQuery2 = query(
+    quizzesUsersRef,
+    where("quizId", "==", doc(db, "quizzes", quizId)),
+    where("studentId", "==", doc(db, "users", studentId))
+  );
+  const quizzesUsersSnapshot = await getDocs(stateQuery2);
+  return quizzesUsersSnapshot;
+};
+
+const addQuizzesUsers = async (quizId, instructorId, studentId) => {
+  const data = {
+    quizId: doc(db, "quizzes", quizId),
+    instructorId: doc(db, "users", instructorId),
+    studentId: doc(db, "users", studentId),
+  };
+  const docref = await addDoc(collection(db, "quizzesUsers"), data);
+  return docref.id;
+};
 export {
   createQuiz,
   getQuizInfo,
@@ -76,4 +111,7 @@ export {
   getAllQuizByInstructorId,
   deleteQuizById,
   deleteQuizzesUsers,
+  getQuizByLiveQuizId,
+  getQuizzesUsersByQuizAndStudentId,
+  addQuizzesUsers,
 };

@@ -42,8 +42,7 @@ const QuizConfig = () => {
     return data.options.some((option) => option.value === "");
   };
 
-  const changeStatuInfo = async (statutype) => {
-    console.log(statutype);
+  const changeStatuInfo = (statutype) => {
     switch (statutype) {
       case "Incomplete":
         setStatuInfo({ disabled: true, checked: false, type: "Incomplete" });
@@ -73,17 +72,30 @@ const QuizConfig = () => {
       error.code = 1;
       setErr(error);
     }
-
-    const initialStatus = quizInfo.questions.some(checkQuestionArray)
-      ? "Incomplete"
-      : "Pasif";
-    setQuizInfo({ ...quizInfo, statu: initialStatus });
-    changeStatuInfo(initialStatus);
-  }, [userInfo, quizInfo.questions]);
+    changeStatuInfo(quiz.statu);
+  }, [userInfo]);
 
   useEffect(() => {
+    let data;
+    let initialStatus;
+    const result = quizInfo.questions.some(checkQuestionArray);
+    console.log(result);
+    if (result) {
+      initialStatus = "Incomplete";
+    } else {
+      console.log(statuInfo.statu);
+      console.log(quizInfo.statu);
+      if (quizInfo.statu === "Active") {
+        initialStatus = "Active";
+      } else {
+        initialStatus = "Pasif";
+      }
+    }
+
+    data = { ...quizInfo, statu: initialStatus };
+    changeStatuInfo(initialStatus);
     const updateStatu = async () => {
-      await updateQuizInfo(params.quizId, quizInfo);
+      await updateQuizInfo(params.quizId, data);
     };
     updateStatu();
   }, [quizInfo]);
@@ -153,6 +165,7 @@ const QuizConfig = () => {
 
   const onChange = () => {
     const newStatus = quizInfo.statu === "Active" ? "Pasif" : "Active";
+
     setStatuInfo({ ...statuInfo, checked: newStatus === "Active" });
     setQuizInfo({
       ...quizInfo,
@@ -178,7 +191,7 @@ const QuizConfig = () => {
               onChange={onChange}
             />
             <div className="text-center ml-2">
-              <span>Statu : {quizInfo.statu}</span>
+              <span>Statu : {statuInfo.type}</span>
             </div>
           </Tooltip>
         </div>
